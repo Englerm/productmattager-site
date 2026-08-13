@@ -685,12 +685,20 @@ img, video { max-width: 100%; display: block; }
   /* 9 cards on a 2-col grid leaves the last card alone in its row */
   .ai-projects .ai-project:nth-child(9) {
     grid-column: 1 / -1;
-    max-width: calc(50% - var(--space-4) / 2);
+    max-width: 420px;
     margin: 0 auto;
   }
 }
 @media (max-width: 600px) {
   .ai-projects { grid-template-columns: 1fr; }
+  .ai-project--wip {
+    width: 100%;
+    min-width: 0;
+  }
+  .ai-project__wip-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
 }
 
 /* ============================================================
