@@ -1089,6 +1089,19 @@ img, video { max-width: 100%; display: block; }
   /* Nav: hide middle links, keep CTA */
   .nav__links li:not(:last-child) { display: none; }
 
+  .nav__cta {
+    font-size: 0.75em;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    white-space: nowrap;
+  }
+
+  .nav__logo {
+    font-size: 0.85em;
+    min-width: 0;
+    flex-shrink: 1;
+  }
+
   .hero__actions { flex-direction: column; align-items: flex-start; }
 
   .case-study {
