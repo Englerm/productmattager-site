@@ -1114,6 +1114,30 @@ img, video { max-width: 100%; display: block; }
     text-align: center;
     gap: var(--space-3);
   }
+
+  .hero {
+    min-height: 100dvh;
+    padding-bottom: 60px;
+  }
+
+  .hero__scroll {
+    position: absolute;
+    bottom: 24px;
+  }
+
+  .section {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .hero::after,
+  .about::after,
+  .praise::after,
+  .contact::before,
+  .ai-building::before,
+  .work::after {
+    height: 40px;
+  }
 }
 
 /* ============================================================
