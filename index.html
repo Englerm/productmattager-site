@@ -1,15 +1,540 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Matt Engler | Product Manager</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matt Engler — Product Manager</title>
+  <meta name="description" content="Senior Technical Product Manager with 10+ years building streaming experiences for the NBA, Tubi, and Nickelodeon.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.jsx"></script>
-</body>
 
+  <!-- ============================================================
+       NAVIGATION
+       ============================================================ -->
+  <nav class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="#" class="nav__logo">Matt Engler</a>
+      <ul class="nav__links">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#ai">AI</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#praise">Praise</a></li>
+        <li><a href="#contact" class="nav__cta">Get in touch</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero" id="home">
+    <div class="hero__grain"></div>
+    <div class="hero__glow"></div>
+
+    <div class="hero__inner">
+      <p class="hero__label">Senior Technical PM &nbsp;·&nbsp; NBA &nbsp;·&nbsp; Tubi &nbsp;·&nbsp; Nickelodeon</p>
+
+      <h1 class="hero__headline">
+        <div class="hero__quote-mask"></div>
+        <span class="hero__line">I see around</span>
+        <span class="hero__line hero__line--accent">corners.</span>
+        <span class="hero__line hero__line--sub">Then I bring everyone else along.</span>
+      </h1>
+
+      <div class="hero__actions">
+        <a href="#work" class="btn btn--primary">View my work</a>
+        <a href="#contact" class="btn btn--ghost">Get in touch</a>
+      </div>
+    </div>
+
+    <div class="hero__scroll" aria-hidden="true">
+      <span>scroll</span>
+      <div class="hero__scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       WORK
+       ============================================================ -->
+  <section class="section work" id="work">
+    <div class="section__inner">
+
+      <div class="section__header fade-up">
+        <span class="section__eyebrow">Selected Work</span>
+        <h2 class="section__title">The corners<br><em>I've seen.</em></h2>
+        <p class="section__desc">Each project started with an insight others had overlooked. Here's how I found them — and what happened when I did.</p>
+      </div>
+
+      <div class="case-studies">
+
+        <article class="case-study fade-up">
+          <div class="case-study__meta">
+            <span class="case-study__num">01</span>
+            <span class="case-study__company">NBA / WNBA</span>
+            <span class="case-study__year">2025–Present</span>
+          </div>
+          <div class="case-study__content">
+            <h3 class="case-study__title">Building the WNBA's streaming home, from scratch</h3>
+            <p class="case-study__desc">The WNBA's CTV app ran on a third-party platform that capped control over the fan experience and the roadmap. I led the team that rebuilt it in-house before the 2026 season.</p>
+            <div class="case-study__tags">
+              <span class="tag">Platform Architecture</span>
+              <span class="tag">CTV</span>
+              <span class="tag">Identity &amp; Entitlements</span>
+            </div>
+          </div>
+          <div class="case-study__stat">
+            <span class="stat__value">100K+</span>
+            <span class="stat__label">fans watching concurrently on opening night</span>
+          </div>
+          <button class="case-study__link" type="button" id="cs-btn-01" aria-expanded="false" aria-controls="cs-panel-01">Read the story →</button>
+          <div class="case-study__panel" id="cs-panel-01" role="region" aria-labelledby="cs-btn-01">
+            <div class="case-study__panel-inner">
+              <div class="case-study__panel-content">
+                <div class="case-study__panel-eyebrow">The setup</div>
+                <p class="case-study__panel-text">The WNBA's connected TV app ran on a third-party vendor's platform. That capped the league's control over the fan experience, the roadmap, and monetization, right as audience and ad demand were both growing fast.</p>
+                <div class="case-study__panel-eyebrow">What I did</div>
+                <p class="case-study__panel-text">I led the rebuild: 9 teams across engineering, ads, identity, analytics, feeds, design, legal, and marketing, with a deadline tied to the start of the season. I started with a teardown of the existing WNBA and NBA apps to map the fan journey and define what the new platform actually needed: onboarding, navigation, live and VOD playback, in-app purchases, stats. From there I split the rebuild into 3 MVP phases with cross-team demos after each, so we could catch problems before they compounded.</p>
+                <p class="case-study__panel-text">Midway through planning, leadership pushed hard for Multiview at launch since it had worked well on the NBA app. I held it back. The WNBA has far fewer concurrent games than the NBA, so the payoff was unproven, and pulling engineers off resume watching (which fans rely on every time they jump back into a live game) would have put core playback at risk for a feature with no validated demand. Multiview moved to post-launch, pending real usage data.</p>
+                <div class="case-study__panel-eyebrow">Where it landed</div>
+                <ul class="case-study__panel-list">
+                  <li>100K+ concurrent fans on opening night</li>
+                  <li>Estimated 3.1M ad impressions and $80K to $100K in ad revenue on day one</li>
+                  <li>Full in-house control of the tech, the roadmap, and monetization</li>
+                  <li>The same architecture can support launches for other leagues and teams</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="case-study fade-up">
+          <div class="case-study__meta">
+            <span class="case-study__num">02</span>
+            <span class="case-study__company">Nickelodeon / Paramount</span>
+            <span class="case-study__year">2016–2023</span>
+          </div>
+          <div class="case-study__content">
+            <h3 class="case-study__title">Relaunching Nick's app when no one else thought it needed it</h3>
+            <p class="case-study__desc">Video, games, and discovery had become three separate products living inside one app. I unified them into a platform kids actually wanted to spend time in.</p>
+            <div class="case-study__tags">
+              <span class="tag">UX Strategy</span>
+              <span class="tag">Kids Platform</span>
+              <span class="tag">Engagement</span>
+            </div>
+          </div>
+          <div class="case-study__stat">
+            <span class="stat__value">+18%</span>
+            <span class="stat__label">engagement · 5.5M new monthly minutes · $125K–$250K new ad revenue</span>
+          </div>
+          <button class="case-study__link" type="button" id="cs-btn-02" aria-expanded="false" aria-controls="cs-panel-02">Read the story →</button>
+          <div class="case-study__panel" id="cs-panel-02" role="region" aria-labelledby="cs-btn-02">
+            <div class="case-study__panel-inner">
+              <div class="case-study__panel-content">
+                <div class="case-study__panel-eyebrow">The setup</div>
+                <p class="case-study__panel-text">I joined Nickelodeon right after Nick and Nick Jr. migrated onto Paramount's shared streaming platform. The migration standardized backend services across brands like MTV and Comedy Central, but it also stripped out the kid-first experience that set our apps apart: games, search, and simple navigation got replaced with text-heavy interfaces young kids couldn't use. Engagement and app store ratings both dropped, and the apps went into maintenance mode with no recovery plan.</p>
+                <div class="case-study__panel-eyebrow">What I did</div>
+                <p class="case-study__panel-text">I compared pre- and post-migration engagement data with the analytics team, then ran app store review analysis, support ticket review, and usability sessions with kids. Three things stood out: removing games directly correlated with shorter sessions and higher drop-off, the new text-heavy navigation created real friction for non-readers, and the migration had also quietly built a backend that could support faster delivery later if I used it right.</p>
+                <p class="case-study__panel-text">Leadership pushed back on my initial recovery plan over complexity and cost. I repositioned the apps as the entry point into Paramount's streaming ecosystem: the place families landed before they were ready to pay for Paramount+ or Noggin. That got buy-in from product leadership, engineering, QA, web, legal, backend, and design.</p>
+                <p class="case-study__panel-text">The plan called for restoring native mobile games, but rebuilding the legacy games for the new codebase would have taken far more engineering time for limited long-term value. I chose HTML5 web games delivered through a custom mobile wrapper: it shipped faster and gave us something reusable for future projects.</p>
+                <p class="case-study__panel-text">I led 12 engineers across iOS and Android, plus QA, web, backend, and design partners, over about a year for the first two phases. The web team was the biggest dependency for the games wrapper, so I built that relationship early, before any risk showed up. It paid off: when delivery started slipping, I found the cause was resourcing on the web side. So I had my own engineers pick up some of the wrapper work to keep the timeline intact.</p>
+                <div class="case-study__panel-eyebrow">Where it landed</div>
+                <ul class="case-study__panel-list">
+                  <li>+18% engagement time: 5.5M additional minutes per month, from around 30M to over 36M</li>
+                  <li>App store ratings recovered above 4 stars</li>
+                  <li>$125K to $250K in new annual ad revenue</li>
+                  <li>Repositioned the apps from maintenance mode to a strategic part of Paramount's ecosystem</li>
+                </ul>
+                <blockquote class="case-study__quote">
+                  <p>"What sets Matt apart is his deep technical expertise. He understands the intricacies of engineering and knows how to communicate them to non-technical stakeholders. That blend of technical knowledge and communication lets him connect product and engineering, and makes sure everyone on the team is working toward the same goal."</p>
+                  <cite>— Adrian Cireasa, Project Manager, Nickelodeon</cite>
+                </blockquote>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="case-study fade-up">
+          <div class="case-study__meta">
+            <span class="case-study__num">03</span>
+            <span class="case-study__company">Tubi</span>
+            <span class="case-study__year">2023–2024</span>
+          </div>
+          <div class="case-study__content">
+            <h3 class="case-study__title">The bottleneck hiding in plain sight on Fire TV</h3>
+            <p class="case-study__desc">A technical constraint in how Tubi ingested channels was quietly capping revenue and discoverability. Fixing it required rethinking the entire distribution strategy — and convincing Amazon to come along.</p>
+            <div class="case-study__tags">
+              <span class="tag">Distribution</span>
+              <span class="tag">Partner Integration</span>
+              <span class="tag">Growth</span>
+            </div>
+          </div>
+          <div class="case-study__stat">
+            <span class="stat__value">+20%</span>
+            <span class="stat__label">traffic and revenue growth on Fire TV Live Tab</span>
+          </div>
+          <button class="case-study__link" type="button" id="cs-btn-03" aria-expanded="false" aria-controls="cs-panel-03">Read the story →</button>
+          <div class="case-study__panel" id="cs-panel-03" role="region" aria-labelledby="cs-btn-03">
+            <div class="case-study__panel-inner">
+              <div class="case-study__panel-content">
+                <div class="case-study__panel-eyebrow">The setup</div>
+                <p class="case-study__panel-text">Tubi's Fire TV Live Tab traffic was dropping fast, on a platform reaching millions of CTV users where Amazon's Live Tab had become a major discovery surface for us.</p>
+                <div class="case-study__panel-eyebrow">What I did</div>
+                <p class="case-study__panel-text">I worked with Data Science, Engineering, and Amazon's Live platform team to trace the full path from discovery to tune-in. We ruled out a recent update from our news team early on. Amazon's manual channel ingestion was capping us at around 50 channels, leaving many of our best-performing feeds invisible on the Live Tab. Engineering confirmed it wasn't a bug: our reliance on non-Gracenote IDs meant we couldn't scale ingestion on Amazon's system at all.</p>
+                <p class="case-study__panel-text">The fix meant trading a high-performing channel that didn't have a Gracenote ID for triple the overall channel coverage. I made that call: a short-term loss for long-term scale and credibility with Amazon. It got fast buy-in across Content, Live Ops, and Amazon itself.</p>
+                <p class="case-study__panel-text">When Amazon needed extra backend work to support channel-order testing, I prioritized speed to catch an upcoming traffic window and pushed ordering optimization to a second phase. We launched in a single push, since the platform didn't support a staged rollout, and managed risk with frequent updates instead.</p>
+                <div class="case-study__panel-eyebrow">Where it landed</div>
+                <ul class="case-study__panel-list">
+                  <li>+20% traffic and ad revenue lift within days</li>
+                  <li>Tripled the overall channel catalog</li>
+                  <li>Amazon cited the update as a model response to platform feedback</li>
+                  <li>Strengthened the case for continued investment in Live</li>
+                </ul>
+                <blockquote class="case-study__quote">
+                  <p>"Whether it was engaging with stakeholders, negotiating priorities, or providing updates to leadership, he did so with confidence and clarity."</p>
+                  <cite>— Ben Clissen, Senior Technical Project Manager, Nickelodeon</cite>
+                </blockquote>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="case-study fade-up">
+          <div class="case-study__meta">
+            <span class="case-study__num">04</span>
+            <span class="case-study__company">Tubi</span>
+            <span class="case-study__year">2023</span>
+          </div>
+          <div class="case-study__content">
+            <h3 class="case-study__title">Launching on Vision Pro when no one wanted to own it</h3>
+            <p class="case-study__desc">Mid-crunch. New platform. Major partner commitment on the line. No clear owner. I stepped in, drove alignment across design and engineering, and shipped — on time, with Apple's editorial backing to prove it.</p>
+            <div class="case-study__tags">
+              <span class="tag">New Platform Launch</span>
+              <span class="tag">Partner Management</span>
+              <span class="tag">Execution</span>
+            </div>
+          </div>
+          <div class="case-study__stat">
+            <span class="stat__value">$150K+</span>
+            <span class="stat__label">in additional Apple editorial support earned at launch</span>
+          </div>
+          <button class="case-study__link" type="button" id="cs-btn-04" aria-expanded="false" aria-controls="cs-panel-04">Read the story →</button>
+          <div class="case-study__panel" id="cs-panel-04" role="region" aria-labelledby="cs-btn-04">
+            <div class="case-study__panel-inner">
+              <div class="case-study__panel-content">
+                <div class="case-study__panel-eyebrow">The setup</div>
+                <p class="case-study__panel-text">My boss had been leading our push to launch on Apple Vision Pro. The day leadership finally approved it, she was on vacation, which left a real leadership gap right as the clock started on a deadline tied to hundreds of thousands of dollars in current and future Apple editorial promotions.</p>
+                <div class="case-study__panel-eyebrow">What I did</div>
+                <p class="case-study__panel-text">I stepped in immediately. I reviewed the existing documentation and go-to-market plan, then met with engineering, marketing, product leadership, legal, and content, including late-night syncs with engineers in Beijing, to check our workstreams against Apple's expectations. Three gaps showed up fast: our go-to-market plan no longer matched Apple's positioning for Vision Pro, milestone ownership was unclear, and a couple of deliverables tied to editorial exposure were at risk of getting missed.</p>
+                <p class="case-study__panel-text">Some people questioned whether we should keep moving without my boss in the loop. I addressed it directly, told the team I had her confidence, and we kept moving. I rebuilt the go-to-market plan with Marketing around Apple's editorial and technical priorities, built a workback schedule that made ownership clear, and ran weekly cross-functional syncs to keep deliverables on track.</p>
+                <p class="case-study__panel-text">One open question was the storefront art: match our existing platform style, or lead with Vision Pro's AR features. I'd already helped Design clear lower-priority work off their plate so they had room to build both versions, and we ran an A/B test at launch rather than picking based on opinion. The AR-focused design won.</p>
+                <div class="case-study__panel-eyebrow">Where it landed</div>
+                <ul class="case-study__panel-list">
+                  <li>Launched on time, meeting our commitment to Apple</li>
+                  <li>$150K+ in new editorial promotional value from Apple</li>
+                  <li>Strengthened the partnership and opened the door to future high-visibility placements</li>
+                  <li>Vision Pro itself had a limited user base, as expected; the promotions still drove a noticeable lift in downloads elsewhere</li>
+                </ul>
+                <blockquote class="case-study__quote">
+                  <p>"He never shied away from a challenge, happily stepping up to lead when there was a vacuum, like shepherding the Vision Pro launch across the finish line."</p>
+                  <cite>— David Golan, Senior Product Manager, Tubi</cite>
+                </blockquote>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       AI BUILDING
+       ============================================================ -->
+  <section class="section ai-building" id="ai">
+    <div class="section__inner">
+
+      <div class="section__header fade-up">
+        <span class="section__eyebrow">Building</span>
+        <h2 class="section__title">Problems I solved<br><em>anyway.</em></h2>
+        <p class="section__desc">I don't wait for a roadmap to ship a fix. These are the tools, agents, and experiments I've built because the problem was sitting right there.</p>
+      </div>
+
+      <div class="ai-projects">
+
+        <article class="ai-project fade-up">
+          <div class="ai-project__icon">⚙</div>
+          <div class="ai-project__content">
+            <h3 class="ai-project__title">Jira Story Generator</h3>
+            <p class="ai-project__desc">Design-to-dev handoff was slow and inconsistent. Built an agent that reads Figma files and auto-generates structured Jira stories — reducing a multi-hour process to minutes.</p>
+            <div class="case-study__tags">
+              <span class="tag">AI Agent</span>
+              <span class="tag">Figma</span>
+              <span class="tag">Jira</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="ai-project fade-up">
+          <div class="ai-project__icon">◎</div>
+          <div class="ai-project__content">
+            <h3 class="ai-project__title">Jira Response Tracker</h3>
+            <p class="ai-project__desc">Comments I left on tickets were falling into the void with no follow-up. Building an agent that surfaces unanswered threads so nothing gets dropped between teams.</p>
+            <div class="case-study__tags">
+              <span class="tag">AI Agent</span>
+              <span class="tag">Jira</span>
+              <span class="tag">Async Workflows</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="ai-project fade-up">
+          <div class="ai-project__icon">◈</div>
+          <div class="ai-project__content">
+            <h3 class="ai-project__title">Digital Chief of Staff</h3>
+            <p class="ai-project__desc">Managing my own priorities felt as chaotic as managing a product. Built a personal AI productivity coach that helps me plan, prioritize, and stay focused — treating myself like a stakeholder.</p>
+            <div class="case-study__tags">
+              <span class="tag">AI Agent</span>
+              <span class="tag">Productivity</span>
+              <span class="tag">Personal OS</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="ai-project fade-up">
+          <div class="ai-project__icon">◇</div>
+          <div class="ai-project__content">
+            <h3 class="ai-project__title">SwiftRead</h3>
+            <p class="ai-project__desc">Too much to read, not enough time. Built a speed reading app to improve information throughput, because staying ahead means actually reading the things you save.</p>
+            <div class="case-study__tags">
+              <span class="tag">Web App</span>
+              <span class="tag">Swift</span>
+              <span class="tag">Reading</span>
+            </div>
+            <a href="https://swift-read.netlify.app/" class="case-study__link" target="_blank" rel="noopener">Visit site →</a>
+          </div>
+        </article>
+
+        <article class="ai-project fade-up">
+          <div class="ai-project__icon">◻</div>
+          <div class="ai-project__content">
+            <h3 class="ai-project__title">TempPhoto</h3>
+            <p class="ai-project__desc">iOS has no native way to mark a photo as temporary — they either live forever or require manual cleanup. Built a Shortcut that auto-deletes photos after a set time. Apple still hasn't shipped this.</p>
+            <div class="case-study__tags">
+              <span class="tag">iOS Shortcut</span>
+              <span class="tag">Automation</span>
+              <span class="tag">UX Gap</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="ai-project fade-up">
+          <div class="ai-project__icon">◐</div>
+          <div class="ai-project__content">
+            <h3 class="ai-project__title">Vesper Standard Time</h3>
+            <p class="ai-project__desc">Daylight saving time forces a jarring 60-minute jump twice a year, with real costs to sleep and safety. I designed an alternative: clocks shift by about 20 seconds a night instead, small enough that nobody notices and nobody resets a clock.</p>
+            <div class="case-study__tags">
+              <span class="tag">Original Concept</span>
+              <span class="tag">Web App</span>
+              <span class="tag">Public Launch</span>
+            </div>
+            <a href="https://vesperstandardtime.com/" class="case-study__link" target="_blank" rel="noopener">Visit site →</a>
+          </div>
+        </article>
+
+        <article class="ai-project fade-up">
+          <div class="ai-project__icon">◆</div>
+          <div class="ai-project__content">
+            <h3 class="ai-project__title">AERO 16</h3>
+            <p class="ai-project__desc">A daily logic puzzle game built for my son. Each puzzle is a grid where every row and column has to add up to a target number. Grids vary in size. Wrong answers come with an explanation of why, not just a red X. Includes a tutorial system and a daily streak counter.</p>
+            <div class="case-study__tags">
+              <span class="tag">React</span>
+              <span class="tag">Vite</span>
+              <span class="tag">Tailwind</span>
+              <span class="tag">Web App</span>
+            </div>
+            <a href="https://aero-16.netlify.app/" class="case-study__link" target="_blank" rel="noopener">Visit site →</a>
+          </div>
+        </article>
+
+        <article class="ai-project ai-project--wip fade-up">
+          <div class="ai-project__wip-badge">In progress</div>
+          <div class="ai-project__icon">⚖</div>
+          <div class="ai-project__content">
+            <h3 class="ai-project__title">Krisys</h3>
+            <p class="ai-project__desc">A Twitch extension built around a simple idea: people argue past each other because they never have to genuinely reckon with the other side. Krisys forces that moment. Each side argues, gets transcribed, and Claude delivers a breakdown. Before the winner is revealed, each debater has to read aloud what they got wrong and what the other side got right.</p>
+            <div class="case-study__tags">
+              <span class="tag">Twitch Extension</span>
+              <span class="tag">Claude API</span>
+              <span class="tag">Whisper API</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="ai-project ai-project--wip fade-up">
+          <div class="ai-project__wip-badge">In progress</div>
+          <div class="ai-project__icon">⏱</div>
+          <div class="ai-project__content">
+            <h3 class="ai-project__title">FamilyTime</h3>
+            <p class="ai-project__desc">Apple's Screen Time gives parents three blunt choices when a kid asks for more time, with no usage context and no granularity. FamilyTime replaces that with time-of-day limits, per-app controls, and a full usage breakdown before a parent approves or denies anything.</p>
+            <div class="case-study__tags">
+              <span class="tag">iOS</span>
+              <span class="tag">FamilyControls API</span>
+              <span class="tag">SwiftUI</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT
+       ============================================================ -->
+  <section class="section about" id="about">
+    <div class="about__glow"></div>
+    <div class="section__inner about__inner">
+
+      <div class="about__text fade-up">
+        <span class="section__eyebrow">About</span>
+        <h2 class="section__title">Hi, I'm Matt.</h2>
+        <p class="about__tagline">If it's got a screen, I've made it stream better.</p>
+        <p class="about__lead">I'm a Senior PM who specializes in what most product playbooks skip: seeing the problem beneath the problem, then rallying everyone else around the solution.</p>
+        <p>10+ years building streaming experiences for some of the biggest names in entertainment — from Nickelodeon's kids apps to Tubi's CTV growth engine to the WNBA's brand-new in-house streaming platform.</p>
+        <p>I lead with user empathy, product instinct, and data — usually in that order. I'm at my best when the problem is messy, the path isn't obvious, and the stakes are real.</p>
+        <p class="about__personal">Outside of product: I read classic sci-fi, get lost in puzzles, and collect new AI tools faster than I can use them. Oh — and I once spent a full year living in a caravan in the desert. Yes, there were camels.</p>
+        <div class="about__links">
+          <a href="https://linkedin.com/in/englermatthew" class="btn btn--ghost" target="_blank" rel="noopener">LinkedIn →</a>
+          <a href="Matthew Engler - Resume.pdf" class="btn btn--ghost" download>Download resume</a>
+        </div>
+      </div>
+
+      <div class="about__aside fade-up">
+        <div class="about__stats">
+          <div class="about__stat">
+            <span class="about__stat-num">10+</span>
+            <span class="about__stat-label">years in streaming &amp; CTV</span>
+          </div>
+          <div class="about__stat">
+            <span class="about__stat-num">3</span>
+            <span class="about__stat-label">major platforms launched</span>
+          </div>
+          <div class="about__stat">
+            <span class="about__stat-num">∞</span>
+            <span class="about__stat-label">corners seen</span>
+          </div>
+        </div>
+
+        <blockquote class="about__quote">
+          <p>"His ability to navigate the complexities of product development while maintaining a clear focus on the user and business goals is truly remarkable."</p>
+          <cite>— Adrian Cireasa, Project Manager @ Nickelodeon</cite>
+        </blockquote>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PRAISE / RECOMMENDATIONS
+       ============================================================ -->
+  <section class="section praise" id="praise">
+    <div class="section__inner">
+
+      <div class="section__header fade-up">
+        <span class="section__eyebrow">Recommendations</span>
+        <h2 class="section__title">What people<br><em>actually say.</em></h2>
+      </div>
+
+      <div class="recs-grid">
+
+        <blockquote class="rec rec--featured fade-up">
+          <p>"I had the pleasure of working closely with Matt, and I can confidently say that he is one of the most exceptional product managers I've encountered. His ability to navigate the complexities of product development while maintaining a clear focus on the user and business goals is truly remarkable. Beyond his technical prowess, Matt's leadership style fosters trust and collaboration."</p>
+          <cite>
+            <strong>Adrian Cireasa</strong>
+            <span>Project Manager, Nickelodeon</span>
+          </cite>
+        </blockquote>
+
+        <blockquote class="rec fade-up">
+          <p>"At Tubi, he demonstrated his ability to drive significant results with key partners like Amazon and Apple. He never shied away from a challenge, happily stepping up to lead when there was a vacuum — like shepherding the Vision Pro launch across the finish line."</p>
+          <cite>
+            <strong>David Golan</strong>
+            <span>Senior Product Manager, Tubi</span>
+          </cite>
+        </blockquote>
+
+        <blockquote class="rec fade-up">
+          <p>"His ability to clearly articulate the product vision was instrumental in aligning our team. Whether engaging with stakeholders, negotiating priorities, or updating leadership, he did so with confidence and clarity."</p>
+          <cite>
+            <strong>Ben Clissen</strong>
+            <span>Senior Technical PM, Paramount Global</span>
+          </cite>
+        </blockquote>
+
+        <blockquote class="rec fade-up">
+          <p>"As a designer, I relied on information that would help develop better designs and Matthew was a pivotal point of contact for all creative needs. His communication and collaborative efforts really refined our design process."</p>
+          <cite>
+            <strong>Rebecca Laval</strong>
+            <span>Product Design, Tubi</span>
+          </cite>
+        </blockquote>
+
+        <blockquote class="rec fade-up">
+          <p>"Matthew led experiments to improve conversion metrics on our various app stores, leading ideation and pressure-testing creative theories. As Tubi expands globally, we have Matthew to thank for laying the foundation of our App Store efforts."</p>
+          <cite>
+            <strong>Dan Bowman</strong>
+            <span>Product Growth, Tubi</span>
+          </cite>
+        </blockquote>
+
+        <blockquote class="rec fade-up">
+          <p>"Matt created very clear and well-documented tickets. He was ready to jump on a call any time we had misunderstandings and had a very positive attitude. He will bring a lot of value through his vast experience, knowledge, kindness, and patience."</p>
+          <cite>
+            <strong>Diana Daia</strong>
+            <span>iOS Software Engineer, Cognizant / Nickelodeon</span>
+          </cite>
+        </blockquote>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT
+       ============================================================ -->
+  <section class="section contact" id="contact">
+    <div class="contact__glow"></div>
+    <div class="section__inner">
+      <div class="contact__inner fade-up">
+        <span class="section__eyebrow">Contact</span>
+        <h2 class="section__title">Let's talk<br><em>corners.</em></h2>
+        <p class="contact__desc">I'm exploring Director of Product and Senior PM roles, with a focus on streaming, CTV, and platform products. If you're building something interesting — or know someone who is — I'd love to hear about it.</p>
+        <div class="contact__links">
+          <a href="mailto:Matt@ProductMattager.com" class="contact__link">Matt@ProductMattager.com</a>
+          <a href="https://linkedin.com/in/englermatthew" class="contact__link" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <span class="footer__name">Matt Engler</span>
+      <span class="footer__copy">© 2026. Product Mattager.</span>
+      <div class="footer__links">
+        <a href="https://linkedin.com/in/englermatthew" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:Matt@ProductMattager.com">Email</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
 </html>

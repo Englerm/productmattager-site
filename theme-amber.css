@@ -1,0 +1,6 @@
+/* Amber/gold theme override — swaps teal for electric amber */
+:root {
+  --color-accent:      #F5A623;
+  --color-accent-glow: rgba(245, 166, 35, 0.12);
+  --color-accent-dim:  rgba(245, 166, 35, 0.4);
+}
