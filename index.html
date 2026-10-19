@@ -530,7 +530,7 @@ html.reading { overflow: hidden; }
         <h2>What people actually say.</h2>
       </div>
       <div class="quotes">
-        <figure class="quote feature"><blockquote><p>"Matt was brought in to lead a project just a few weeks after it had gotten underway. This project aimed to replace a mature product already in production; had a tight, immovable deadline; and would require someone who could balance the needs of a diverse set of stakeholders and fans alike.</p><p>Matt hit the ground running immediately and worked to develop dynamic relationships across the organization. Those relationships allowed him to lead a multi-faceted team that was confident in his guidance, while he ensured direction was clear and collaborative. As a result, the application was delivered on-time and exceeded expectations across the board.</p><p>Matt did an especially excellent job of appropriately identifying when to make a decision or take on a problem himself versus when it was important to escalate to his manager and other senior leads. It made my job easier knowing Matt was on top of things and required very little direction while still ensuring I was in the loop when necessary.</p><p>I really enjoyed working with and learning from Matt, and I hope to have an opportunity to work with him again in the future. I would absolutely hire Matt again if given the opportunity."</p></blockquote><figcaption><b>Kyle Magee</b><span>Digital Product Leader, NBA · managed Matt directly</span></figcaption></figure>
+        <figure class="quote feature"><blockquote><p>"Matt hit the ground running immediately and worked to develop dynamic relationships across the organization. Those relationships allowed him to lead a multi-faceted team that was confident in his guidance, while he ensured direction was clear and collaborative. As a result, the application was delivered on-time and exceeded expectations across the board."</p></blockquote><figcaption><b>Kyle Magee</b><span>Digital Product Leader, NBA · managed Matt directly</span></figcaption></figure>
         <figure class="quote"><blockquote>"I had the pleasure of working closely with Matt, and I can confidently say that he is one of the most exceptional product managers I've encountered. His ability to navigate the complexities of product development while maintaining a clear focus on the user and business goals is truly remarkable. Beyond his technical prowess, Matt's leadership style fosters trust and collaboration."</blockquote><figcaption><b>Adrian Cireasa</b><span>Project Manager, Nickelodeon</span></figcaption></figure>
         <figure class="quote"><blockquote>"At Tubi, he demonstrated his ability to drive significant results with key partners like Amazon and Apple. He never shied away from a challenge, happily stepping up to lead when there was a vacuum, like shepherding the Vision Pro launch across the finish line."</blockquote><figcaption><b>David Golan</b><span>Senior Product Manager, Tubi</span></figcaption></figure>
         <figure class="quote"><blockquote>"His ability to clearly articulate the product vision was instrumental in aligning our team. Whether engaging with stakeholders, negotiating priorities, or updating leadership, he did so with confidence and clarity."</blockquote><figcaption><b>Ben Clissen</b><span>Senior Technical PM, Paramount Global</span></figcaption></figure>
@@ -1137,7 +1137,7 @@ html.reading { overflow: hidden; }
   (function () {
     var geos = [new THREE.SphereGeometry(1, 32, 16), new THREE.TorusGeometry(0.9, 0.36, 18, 48), new THREE.ConeGeometry(0.9, 1.8, 32), new THREE.IcosahedronGeometry(1, 1), new THREE.CylinderGeometry(0.7, 0.7, 1.6, 32)];
     var cols = [0xff6a00, 0xff8a1f, 0x8c3dff, 0xffffff, 0x8cff4a, 0xffd23f, 0x2bb6ff];
-    var n = mobile ? 26 : 40;
+    var n = mobile ? 14 : 22;
     for (var i = 0; i < n; i++) {
       var side = i % 2 ? 1 : -1;
       var m = new THREE.Mesh(geos[i % geos.length], new THREE.MeshStandardMaterial({ color: cols[i % cols.length], roughness: 0.35, metalness: 0.05, flatShading: i % geos.length === 3 }));
@@ -1158,7 +1158,44 @@ html.reading { overflow: hidden; }
       nick.add(bl);
     }
   })();
+  // Nickelodeon app icons floating at different depths around the Nick world
+  var floaters = [];
+  (function () {
+    var list = [
+      ['icons/nick.png', -6, 7.5, -8, 2.2], ['icons/nickjr.png', 7.5, 9, -16, 2.6], ['icons/sbu.png', -9, 4, -20, 3],
+      ['icons/float/spongebob.png', 5.5, 3.2, -6, 1.6], ['icons/float/pawpatrol.png', -4.5, 10.5, -26, 2.4],
+      ['icons/float/blaze.png', 11, 5, -28, 3.2], ['icons/float/loudhouse.png', -12, 8.5, -34, 3.2],
+      ['icons/float/noggin.png', 4.5, 11.5, -40, 3], ['icons/float/shimmer.png', -7, 2.8, -44, 3],
+      ['icons/float/tmnt.png', 13, 9.5, -46, 3.6], ['icons/float/screensup.png', -3.5, 6.5, -58, 3.6],
+      ['icons/float/pawpatrol-sea.png', 9, 3.5, -62, 3.6]
+    ];
+    var loader = new THREE.TextureLoader(), geo = new THREE.PlaneGeometry(1, 1);
+    var shadowTex = (function () {
+      var c = document.createElement('canvas'); c.width = c.height = 128; var g = c.getContext('2d');
+      var r = g.createRadialGradient(64, 64, 10, 64, 64, 64); r.addColorStop(0, 'rgba(60,20,0,0.45)'); r.addColorStop(1, 'rgba(60,20,0,0)');
+      g.fillStyle = r; g.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c);
+    })();
+    list.forEach(function (d, n) {
+      var mat = new THREE.MeshBasicMaterial({ transparent: true, alphaTest: 0.02, side: THREE.DoubleSide, opacity: 0 });
+      loader.load(d[0], function (tx) { tx.anisotropy = renderer.capabilities.getMaxAnisotropy(); mat.map = tx; mat.opacity = 1; mat.needsUpdate = true; });
+      var grp = new THREE.Group();
+      var sh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false }));
+      sh.scale.setScalar(1.35); sh.position.set(0.06, -0.1, -0.05); grp.add(sh);
+      grp.add(new THREE.Mesh(geo, mat));
+      grp.scale.setScalar(d[4]);
+      grp.position.set(d[1], d[2], d[3]);
+      grp.lookAt(d[1] * 0.25, d[2] * 0.6 + 1.5, 12);
+      grp.userData = { y: d[2], ph: n * 1.7, sp: 0.5 + (n % 4) * 0.12, rz: (n % 2 ? 1 : -1) * (0.08 + (n % 3) * 0.05), ry: grp.rotation.y };
+      nick.add(grp); floaters.push(grp);
+    });
+  })();
   function updateNick(time) {
+    for (var f = 0; f < floaters.length; f++) {
+      var g = floaters[f], q = g.userData;
+      g.position.y = q.y + Math.sin(time * q.sp + q.ph) * 0.35;
+      g.rotation.z = q.rz + Math.sin(time * 0.6 + q.ph) * 0.06;
+      g.rotation.y = q.ry + Math.sin(time * 0.4 + q.ph) * 0.12;
+    }
     for (var i = 0; i < shapes.length; i++) {
       var m = shapes[i], u = m.userData;
       m.position.y = u.y + Math.sin(time * u.sp + u.ph) * 0.5;
