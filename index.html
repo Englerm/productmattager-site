@@ -1,543 +1,1637 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Matt Engler – The Product Mattager</title>
-  <meta name="description" content="Senior Technical Product Manager with 10+ years building streaming experiences for the NBA, Tubi, and Nickelodeon.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon.ico">
-  <link rel="apple-touch-icon" href="favicon.ico">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Matt Engler – The Product Mattager</title>
+<meta name="description" content="Matt Engler, Senior Technical PM. Streaming, CTV, and platform products at the NBA, Tubi, and Nickelodeon.">
+<meta property="og:title" content="Matt Engler – The Product Mattager">
+<meta property="og:description" content="I see around corners. Then I bring everyone else along.">
+<meta property="og:url" content="https://productmattager.com/">
+<meta name="theme-color" content="#0f0c14">
+<style>
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Figtree:wght@400;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: a pinned WebGL tunnel (three eras, newest first) with timed stops at each case study,
+   then the tunnel ends and the rest of the site scrolls up as normal sections over it */
+:root {
+  --ink: #0f0c14;
+  --ink-2: #17131e;
+  --fg: #f4f1f8;
+  --muted: #b9b1c7;
+  --rule: rgba(255, 255, 255, 0.12);
+  --amber: #ffb03b;
+  /* era palettes, used by the cards in the tunnel */
+  --nba-panel: rgba(8, 22, 58, 0.78);   --nba-accent: #ff8f3d;  --nba-line: rgba(120, 165, 255, 0.4);
+  --tubi-panel: rgba(69, 0, 157, 0.74); --tubi-accent: #ffff13; --tubi-line: rgba(255, 255, 19, 0.42);
+  --nick-panel: rgba(46, 18, 0, 0.78);  --nick-accent: #8cff4a; --nick-line: rgba(255, 122, 0, 0.5);
+  --display: "Bricolage Grotesque", "Arial Black", system-ui, sans-serif;
+  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+html { background: var(--ink); scroll-behavior: auto; }
+body {
+  background: var(--ink);
+  color: var(--fg);
+  font: 400 1rem/1.6 var(--body);
+  overflow-x: hidden;
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+
+#scene { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+.spacer { height: 1000vh; }
+
+/* top bar */
+.topbar {
+  position: fixed; z-index: 5; top: 0; left: 0; right: 0;
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
+  padding-bottom: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  pointer-events: none;
+}
+.topbar > * { pointer-events: auto; }
+.brand { font: 800 1rem/1 var(--display); letter-spacing: -0.01em; text-decoration: none; }
+.brand span { color: var(--amber); }
+.btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  font: 600 0.85rem/1 var(--body);
+  text-decoration: none;
+  color: var(--ink); background: var(--amber);
+  border: 0; border-radius: 99px;
+  padding: 0.65rem 1rem;
+  cursor: pointer;
+}
+.btn.ghost { background: transparent; color: var(--fg); border: 1px solid var(--rule); }
+
+/* chapter rail */
+.rail {
+  position: fixed; z-index: 4;
+  left: max(16px, env(safe-area-inset-left, 0px));
+  top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 0.35rem;
+  margin: 0; padding: 0; list-style: none;
+}
+.rail button {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: none; border: 0; padding: 0.3rem 0;
+  font: 500 0.68rem/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); cursor: pointer; text-align: left;
+}
+.rail .dot { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid currentColor; flex: none; transition: transform .2s, background .2s; }
+.rail button.on { color: var(--fg); }
+.rail button.on .dot { background: var(--fg); transform: scale(1.3); }
+.rail .lbl { opacity: 0; transition: opacity .2s; }
+.rail:hover .lbl, .rail button.on .lbl, .rail button:focus-visible .lbl { opacity: 1; }
+
+/* tunnel cards */
+.stage { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+.card {
+  --panel: var(--tubi-panel); --accent: var(--tubi-accent); --line: var(--tubi-line);
+  position: absolute; left: 50%; top: 50%;
+  width: min(32rem, calc(100vw - 72px));
+  margin-left: calc(min(32rem, calc(100vw - 72px)) / -2);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1.5rem 1.6rem;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+  visibility: hidden;
+}
+.card[data-zone="nba"] { --panel: var(--nba-panel); --accent: var(--nba-accent); --line: var(--nba-line); }
+.card[data-zone="nick"] { --panel: var(--nick-panel); --accent: var(--nick-accent); --line: var(--nick-line); }
+.card.live { pointer-events: auto; }
+.card.hero {
+  background: none; border: 0; backdrop-filter: none; -webkit-backdrop-filter: none;
+  text-align: center;
+  width: min(42rem, calc(100vw - 72px));
+  margin-left: calc(min(42rem, calc(100vw - 72px)) / -2);
+}
+.eyebrow {
+  font: 500 0.7rem/1.3 var(--mono); letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent, var(--amber)); margin: 0 0 0.85rem;
+}
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.04; }
+h1 { font-size: clamp(2.3rem, 7.5vw, 4.8rem); font-weight: 800; letter-spacing: -0.02em; }
+h1 em { font-style: normal; color: var(--amber); }
+h2 { font-size: clamp(1.45rem, 4.4vw, 2.1rem); font-weight: 800; letter-spacing: -0.01em; margin-bottom: 0.65rem; }
+h3 { font-size: 1.15rem; font-weight: 800; }
+p { margin: 0; color: var(--muted); max-width: 62ch; }
+.hero .sub { margin: 1rem auto 0; font: 500 0.78rem/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg); opacity: 0.8; }
+.hero .cue { margin-top: 2rem; font: 500 0.72rem/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.7; }
+.hero .cue span { display: inline-block; animation: bob 1.8s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(6px); } }
+.metrics { display: flex; flex-wrap: wrap; gap: 1.2rem 1.6rem; margin: 1.1rem 0 0; padding: 0; list-style: none; }
+.metrics li { min-width: 0; }
+.metrics b { display: block; font: 800 1.45rem/1 var(--display); color: var(--accent); font-variant-numeric: tabular-nums; }
+.metrics span { font-size: 0.8rem; color: var(--muted); }
+.tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+.tag { font: 500 0.66rem/1 var(--mono); letter-spacing: 0.06em; border: 1px solid var(--line, var(--rule)); border-radius: 99px; padding: 0.4rem 0.6rem; color: var(--fg); }
+.more { display: inline-block; margin-top: 1rem; font-weight: 600; color: var(--accent); text-decoration: none; }
+.more:hover { text-decoration: underline; }
+
+/* era gauge */
+.gauge {
+  position: fixed; z-index: 4;
+  right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  display: flex; align-items: center; gap: 0.6rem;
+  font: 500 0.7rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  background: rgba(15, 12, 20, 0.7); border: 1px solid var(--rule); border-radius: 99px;
+  padding: 0.5rem 0.8rem;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.gauge b { font-weight: 500; color: var(--amber); }
+
+/* after the tunnel */
+.rest { position: relative; z-index: 3; background: var(--ink); }
+.band {
+  padding-block: clamp(4rem, 10vw, 7rem);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  border-top: 1px solid var(--rule);
+}
+.band:first-child { border-top: 0; box-shadow: 0 -60px 80px 20px var(--ink); }
+.wrap { max-width: 68rem; margin: 0 auto; display: grid; gap: 2rem; }
+.head { display: grid; gap: 0.6rem; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: 1rem; }
+.proj {
+  display: grid; align-content: start; gap: 0.55rem; min-width: 0;
+  background: var(--ink-2); border: 1px solid var(--rule); border-radius: 10px;
+  padding: 1.25rem;
+}
+.proj .status { font: 500 0.62rem/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); }
+.proj .tags { margin-top: 0.3rem; }
+.proj a { color: var(--amber); font-weight: 600; text-decoration: none; }
+.about { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 2.5rem; align-items: start; }
+.about p + p { margin-top: 1rem; }
+.stats { display: grid; gap: 1rem; margin: 0; padding: 0; list-style: none; }
+.stats li { border-top: 1px solid var(--rule); padding-top: 0.8rem; }
+.stats b { display: block; font: 800 2rem/1 var(--display); color: var(--amber); }
+.stats span { font-size: 0.85rem; color: var(--muted); }
+.people { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: 1rem; margin: 0; padding: 0; list-style: none; }
+.people li { border-left: 2px solid var(--amber); padding: 0.2rem 0 0.2rem 0.9rem; }
+.people b { display: block; }
+.people span { font-size: 0.85rem; color: var(--muted); }
+.contact { text-align: center; justify-items: center; }
+.contact h2 { font-size: clamp(2rem, 7vw, 3.6rem); }
+.mail { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.6rem; }
+.mail code { font: 500 1rem/1 var(--mono); user-select: all; padding: 0.7rem 0.9rem; border: 1px solid var(--rule); border-radius: 8px; }
+footer { padding-block: 2rem calc(2rem + env(safe-area-inset-bottom, 0px)); text-align: center; font-size: 0.8rem; color: var(--muted); border-top: 1px solid var(--rule); }
+
+
+/* story panel */
+.more { background: none; border: 0; padding: 0; font: inherit; font-weight: 600; cursor: pointer; }
+.story {
+  --panel: var(--tubi-panel); --accent: var(--tubi-accent); --line: var(--tubi-line);
+  position: fixed; inset: 0; z-index: 8;
+  overflow-y: auto; overscroll-behavior: contain;
+  background: rgba(8, 6, 12, 0.35);
+  padding-top: calc(72px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.story[data-zone="nba"] { --panel: var(--nba-panel); --accent: var(--nba-accent); --line: var(--nba-line); }
+.story[data-zone="nick"] { --panel: var(--nick-panel); --accent: var(--nick-accent); --line: var(--nick-line); }
+.story-inner {
+  position: relative;
+  max-width: 44rem; margin: 0 auto;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: clamp(1.4rem, 4vw, 2.4rem);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  display: grid; gap: 1rem;
+  animation: rise .45s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes rise { from { transform: translateY(40px) scale(.97); opacity: 0; } }
+.story-inner h2 { padding-right: 2.5rem; }
+.story-body { display: grid; gap: 0.9rem; }
+.story-body h3 { font: 500 0.72rem/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-top: 0.8rem; }
+.story-body p, .story-body li { color: var(--fg); opacity: 0.88; }
+.story-body ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.4rem; }
+.story-body li::marker { color: var(--accent); }
+.story-body blockquote { margin: 0.8rem 0 0; padding-left: 1rem; border-left: 2px solid var(--accent); font-size: 1.05rem; color: var(--fg); }
+.story-body cite { display: block; margin-top: 0.6rem; font: 500 0.72rem/1.4 var(--mono); font-style: normal; letter-spacing: 0.06em; color: var(--muted); }
+.story-close {
+  position: absolute; top: 0.9rem; right: 0.9rem;
+  width: 2.4rem; height: 2.4rem; border-radius: 50%;
+  border: 1px solid var(--line); background: transparent; color: var(--fg);
+  font-size: 1rem; cursor: pointer;
+}
+#story-back { background: var(--accent); }
+.story-foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-top: 0.6rem; }
+.card-foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-top: 1rem; }
+.card-foot .more { margin-top: 0; }
+.app-icons { display: flex; gap: 0.5rem; }
+.app-icons img { width: 52px; height: 52px; display: block; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.45)); }
+@media (max-width: 760px) { .card .app-icons img { width: 42px; height: 42px; } }
+html.reading { overflow: hidden; }
+
+/* praise quotes */
+.quotes { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); gap: 1rem; }
+.quote { margin: 0; display: grid; align-content: space-between; gap: 1rem; min-width: 0; background: var(--ink-2); border: 1px solid var(--rule); border-radius: 10px; padding: 1.3rem; }
+.quote blockquote { margin: 0; color: var(--fg); opacity: 0.9; }
+.quote.feature { grid-column: 1 / -1; border-color: rgba(255,176,59,0.4); padding: clamp(1.3rem, 3vw, 2rem); }
+.quote.feature blockquote { font-size: 1.08rem; display: grid; gap: 0.8rem; max-width: 70ch; }
+.quote blockquote p { margin: 0; color: inherit; }
+.quote figcaption { border-top: 1px solid var(--rule); padding-top: 0.8rem; }
+.quote b { display: block; }
+.quote span { font-size: 0.85rem; color: var(--muted); }
+
+
+/* journey overlays */
+.veil { position: fixed; inset: 0; z-index: 1; background: #0b0018; opacity: 0; pointer-events: none; }
+#slime { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; visibility: hidden; }
+.cue {
+  position: fixed; z-index: 3; left: 0; right: 0;
+  bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  text-align: center; pointer-events: none;
+  font: 500 0.72rem/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg);
+}
+.cue span { display: inline-block; padding: 0.6rem 0.9rem; border: 1px solid var(--rule); border-radius: 99px; background: rgba(15,12,20,0.55); animation: bob 1.8s ease-in-out infinite; }
+.nogl .cue, .nogl .veil, .nogl #slime { display: none; }
+.gl .card.jumbo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; margin: 0; padding: 0; }
+@media (prefers-reduced-motion: reduce) { .cue span { animation: none; } }
+
+/* fallback without WebGL */
+.nogl #scene, .nogl .spacer, .nogl .gauge { display: none; }
+.nogl body { background: radial-gradient(ellipse at 50% 0%, #2a0f5a 0%, var(--ink) 60%) no-repeat, var(--ink); }
+.nogl .stage {
+  position: relative; overflow: visible; pointer-events: auto;
+  display: flex; flex-direction: column; align-items: center; gap: 4rem;
+  padding-block: 8rem 4rem;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.nogl .card { position: static; margin-left: 0; visibility: visible; transform: none !important; opacity: 1 !important; pointer-events: auto; }
+
+@media (max-width: 760px) {
+  .about { grid-template-columns: 1fr; }
+  .rail { left: auto; right: max(8px, env(safe-area-inset-right, 0px)); }
+  .rail .lbl { display: none; }
+  .card, .card.hero { width: calc(100vw - 48px); margin-left: calc((100vw - 48px) / -2); }
+  .card { padding: 1.15rem 1.2rem; }
+  .gauge { right: auto; left: max(16px, env(safe-area-inset-left, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero .cue span { animation: none; }
+}
+</style>
+
 </head>
 <body>
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="veil" id="veil" aria-hidden="true"></div>
+<canvas id="slime" aria-hidden="true"></canvas>
+<div class="cue" id="cue" aria-hidden="true"><span>Scroll to tip off ↓</span></div>
 
-  <!-- ============================================================
-       NAVIGATION
-       ============================================================ -->
-  <nav class="nav" id="nav">
-    <div class="nav__inner">
-      <a href="#" class="nav__logo">Matt Engler | Product Mattager</a>
-      <ul class="nav__links">
-        <li><a href="#work">Work</a></li>
-        <li><a href="#ai">AI</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#praise">Praise</a></li>
-        <li><a href="#contact" class="nav__cta">Get in touch</a></li>
+<header class="topbar">
+  <a class="brand" href="#top">Matt Engler<span>.</span></a>
+  <a class="btn" href="#contact" data-jump="contact">Get in touch</a>
+</header>
+
+<nav aria-label="Chapters">
+  <ul class="rail" id="rail">
+    <li><button data-stop="0"><span class="dot"></span><span class="lbl">Start</span></button></li>
+    <li><button data-stop="1"><span class="dot"></span><span class="lbl">WNBA</span></button></li>
+    <li><button data-stop="2"><span class="dot"></span><span class="lbl">Fire TV</span></button></li>
+    <li><button data-stop="3"><span class="dot"></span><span class="lbl">Vision Pro</span></button></li>
+    <li><button data-stop="4"><span class="dot"></span><span class="lbl">Nick</span></button></li>
+    <li><button data-stop="5"><span class="dot"></span><span class="lbl">Super Brawl</span></button></li>
+    <li><button data-jump="building"><span class="dot"></span><span class="lbl">Building</span></button></li>
+    <li><button data-jump="about"><span class="dot"></span><span class="lbl">About</span></button></li>
+    <li><button data-jump="contact"><span class="dot"></span><span class="lbl">Contact</span></button></li>
+  </ul>
+</nav>
+
+<main>
+<div class="stage" id="stage">
+  <section class="card hero jumbo" id="top" data-zone="nba">
+    <h1>I see around corners. <em>Then I bring everyone else along.</em></h1>
+    <p class="sub">Senior Technical PM · NBA · Tubi · Nickelodeon</p>
+  </section>
+
+  <article class="card" data-zone="nba" data-style="rise">
+    <p class="eyebrow">NBA / WNBA · 2025–Present</p>
+    <h2>Building the WNBA's streaming home, from scratch</h2>
+    <p>The WNBA's CTV app ran on a third-party platform that capped control over the fan experience and the roadmap. I led the team that rebuilt it in-house before the 2026 season.</p>
+    <ul class="metrics">
+      <li><b>100K+</b><span>fans watching concurrently on opening night</span></li>
+    </ul>
+    <div class="tags"><span class="tag">Platform Architecture</span><span class="tag">CTV</span><span class="tag">Identity &amp; Entitlements</span></div>
+    <div class="card-foot"><button class="more" type="button" data-story="wnba">Read the story →</button><div class="app-icons"><img src="icons/wnba.png" alt="WNBA app icon" width="52" height="52"></div></div>
+  </article>
+
+  <article class="card" data-zone="tubi" data-style="zoom">
+    <p class="eyebrow">Tubi · 2023–2024</p>
+    <h2>The bottleneck hiding in plain sight on Fire TV</h2>
+    <p>A technical constraint in how Tubi ingested channels was quietly capping revenue and discoverability. Fixing it meant rethinking the distribution strategy and convincing Amazon to come along.</p>
+    <ul class="metrics">
+      <li><b>+20%</b><span>traffic and revenue growth on Fire TV Live Tab</span></li>
+    </ul>
+    <div class="tags"><span class="tag">Distribution</span><span class="tag">Partner Integration</span><span class="tag">Growth</span></div>
+    <div class="card-foot"><button class="more" type="button" data-story="firetv">Read the story →</button><div class="app-icons"><img src="icons/tubi.png" alt="Tubi app icon" width="52" height="52"></div></div>
+  </article>
+
+  <article class="card" data-zone="tubi" data-style="zoom">
+    <p class="eyebrow">Tubi · 2023</p>
+    <h2>Launching on Vision Pro when no one wanted to own it</h2>
+    <p>Mid-crunch. New platform. Major partner commitment on the line. No clear owner. I stepped in, drove alignment across design and engineering, and shipped on time, with Apple's editorial backing to prove it.</p>
+    <ul class="metrics">
+      <li><b>$150K+</b><span>in additional Apple editorial support earned at launch</span></li>
+    </ul>
+    <div class="tags"><span class="tag">New Platform Launch</span><span class="tag">Partner Management</span><span class="tag">Execution</span></div>
+    <div class="card-foot"><button class="more" type="button" data-story="visionpro">Read the story →</button><div class="app-icons"><img src="icons/tubi.png" alt="Tubi app icon" width="52" height="52"></div></div>
+  </article>
+
+  <article class="card" data-zone="nick" data-style="rise">
+    <p class="eyebrow">Nickelodeon / Paramount · 2016–2023</p>
+    <h2>Relaunching a Nick app when no one else knew what to do</h2>
+    <p>Video, games, and discovery had become three separate products living inside one app. I unified them into a platform kids actually wanted to spend time in.</p>
+    <ul class="metrics">
+      <li><b>+18%</b><span>engagement · 5.5M new monthly minutes · $125K–$250K new ad revenue</span></li>
+    </ul>
+    <div class="tags"><span class="tag">UX Strategy</span><span class="tag">Kids Platform</span><span class="tag">Engagement</span></div>
+    <div class="card-foot"><button class="more" type="button" data-story="nick">Read the story →</button><div class="app-icons"><img src="icons/nick.png" alt="Nick app icon" width="52" height="52"><img src="icons/nickjr.png" alt="Nick Jr. app icon" width="52" height="52"></div></div>
+  </article>
+
+  <article class="card" data-zone="nick" data-style="rise">
+    <p class="eyebrow">Nickelodeon / Paramount · 2016–2023</p>
+    <h2>Proving a $5M game had an audience before it launched</h2>
+    <p>Leadership doubted there was demand for Super Brawl Universe, Nick's biggest cross-IP kids' mobile game. I used data, pre-registration, and platform partnerships to de-risk the launch.</p>
+    <ul class="metrics">
+      <li><b>1.5M</b><span>pre-registrations</span></li>
+      <li><b>630K</b><span>first-week installs</span></li>
+    </ul>
+    <div class="tags"><span class="tag">Launch Strategy</span><span class="tag">Platform Partnerships</span><span class="tag">ASO</span></div>
+    <div class="card-foot"><button class="more" type="button" data-story="sbu">Read the story →</button><div class="app-icons"><img src="icons/sbu.png" alt="Super Brawl Universe app icon" width="52" height="52"></div></div>
+  </article>
+</div>
+
+
+<!-- Full case studies, shown in the story panel -->
+<template id="story-wnba" data-icons="wnba" data-zone="nba" data-eyebrow="NBA / WNBA · 2025–Present" data-title="Building the WNBA's streaming home, from scratch">
+  <h3>The setup</h3>
+  <p>The WNBA's connected TV app ran on a third-party vendor's platform. That capped the league's control over the fan experience, the roadmap, and monetization, right as audience and ad demand were both growing fast.</p>
+  <h3>What I did</h3>
+  <p>I led the rebuild: 9 teams across engineering, ads, identity, analytics, feeds, design, legal, and marketing, with a deadline tied to the start of the season. I started with a teardown of the existing WNBA and NBA apps to map the fan journey and define what the new platform actually needed: onboarding, navigation, live and VOD playback, in-app purchases, stats. From there I split the rebuild into 3 MVP phases with cross-team demos after each, so we could catch problems before they compounded.</p>
+  <p>Midway through planning, leadership pushed hard for Multiview at launch since it had worked well on the NBA app. I held it back. The WNBA has far fewer concurrent games than the NBA, so the payoff was unproven, and pulling engineers off resume watching (which fans rely on every time they jump back into a live game) would have put core playback at risk for a feature with no validated demand. Multiview moved to post-launch, pending real usage data.</p>
+  <h3>Where it landed</h3>
+  <ul>
+    <li>100K+ concurrent fans on opening night</li>
+    <li>Estimated 3.1M ad impressions and $80K to $100K in ad revenue on day one</li>
+    <li>Full in-house control of the tech, the roadmap, and monetization</li>
+    <li>The same architecture can support launches for other leagues and teams</li>
+  </ul>
+  <blockquote>"Matt hit the ground running immediately and worked to develop dynamic relationships across the organization... As a result, the application was delivered on-time and exceeded expectations across the board."<cite>Kyle Magee, Digital Product Leader, NBA</cite></blockquote>
+</template>
+
+<template id="story-firetv" data-icons="tubi" data-zone="tubi" data-eyebrow="Tubi · 2023–2024" data-title="The bottleneck hiding in plain sight on Fire TV">
+  <h3>The setup</h3>
+  <p>Tubi's Fire TV Live Tab traffic was dropping fast, on a platform reaching millions of CTV users where Amazon's Live Tab had become a major discovery surface for us.</p>
+  <h3>What I did</h3>
+  <p>I worked with Data Science, Engineering, and Amazon's Live platform team to trace the full path from discovery to tune-in. We ruled out a recent update from our news team early on. Amazon's manual channel ingestion was capping us at around 50 channels, leaving many of our best-performing feeds invisible on the Live Tab. Engineering confirmed it wasn't a bug: our reliance on non-Gracenote IDs meant we couldn't scale ingestion on Amazon's system at all.</p>
+  <p>The fix meant trading a high-performing channel that didn't have a Gracenote ID for triple the overall channel coverage. I made that call: a short-term loss for long-term scale and credibility with Amazon. It got fast buy-in across Content, Live Ops, and Amazon itself.</p>
+  <p>When Amazon needed extra backend work to support channel-order testing, I prioritized speed to catch an upcoming traffic window and pushed ordering optimization to a second phase. We launched in a single push, since the platform didn't support a staged rollout, and managed risk with frequent updates instead.</p>
+  <h3>Where it landed</h3>
+  <ul>
+    <li>+20% traffic and ad revenue lift within days</li>
+    <li>Tripled the overall channel catalog</li>
+    <li>Amazon cited the update as a model response to platform feedback</li>
+    <li>Strengthened the case for continued investment in Live</li>
+  </ul>
+  <blockquote>"Whether it was engaging with stakeholders, negotiating priorities, or providing updates to leadership, he did so with confidence and clarity."<cite>Ben Clissen, Senior Technical Project Manager, Nickelodeon</cite></blockquote>
+</template>
+
+<template id="story-visionpro" data-icons="tubi" data-zone="tubi" data-eyebrow="Tubi · 2023" data-title="Launching on Vision Pro when no one wanted to own it">
+  <h3>The setup</h3>
+  <p>My boss had been leading our push to launch on Apple Vision Pro. The day leadership finally approved it, she was on vacation, which left a real leadership gap right as the clock started on a deadline tied to hundreds of thousands of dollars in current and future Apple editorial promotions.</p>
+  <h3>What I did</h3>
+  <p>I stepped in immediately. I reviewed the existing documentation and go-to-market plan, then met with engineering, marketing, product leadership, legal, and content, including late-night syncs with engineers in Beijing, to check our workstreams against Apple's expectations. Three gaps came up: our launch plan hadn't matched Apple's positioning for Vision Pro, milestone ownership was unclear, and a couple of deliverables tied to editorial exposure were at risk of getting missed.</p>
+  <p>Some people questioned whether we should keep moving without my boss in the loop. I addressed it directly, told the team I had her confidence, and we kept moving. I rebuilt the go-to-market plan with Marketing around Apple's editorial and technical priorities, built a workback schedule that made ownership clear, and ran weekly cross-functional syncs to keep deliverables on track.</p>
+  <p>One open question was the storefront art: match our existing platform style, or lead with Vision Pro's AR features. I'd already helped Design clear lower-priority work off their plate so they had room to build both versions, and we ran an A/B test at launch rather than picking based on opinion. The AR-focused design won.</p>
+  <h3>Where it landed</h3>
+  <ul>
+    <li>Launched on time, meeting our commitment to Apple</li>
+    <li>$150K+ in new editorial promotional value from Apple</li>
+    <li>Strengthened the partnership and opened the door to future high-visibility placements</li>
+    <li>Vision Pro itself had a limited user base, as expected; the promotions still drove a noticeable lift in downloads elsewhere</li>
+  </ul>
+  <blockquote>"He never shied away from a challenge, happily stepping up to lead when there was a vacuum, like shepherding the Vision Pro launch across the finish line."<cite>David Golan, Senior Product Manager, Tubi</cite></blockquote>
+</template>
+
+<template id="story-nick" data-icons="nick,nickjr" data-zone="nick" data-eyebrow="Nickelodeon / Paramount · 2016–2023" data-title="Relaunching a Nick app when no one else knew what to do">
+  <h3>The setup</h3>
+  <p>I joined Nickelodeon right after Nick and Nick Jr. migrated onto Paramount's shared streaming platform. The migration standardized backend services across brands like MTV and Comedy Central, but it also stripped out the kid-first experience that set our apps apart: games, search, and simple navigation got replaced with text-heavy interfaces young kids couldn't use. Engagement and app store ratings both dropped, and the apps went into maintenance mode with no recovery plan.</p>
+  <h3>What I did</h3>
+  <p>I compared pre- and post-migration engagement data with the analytics team, then ran app store review analysis, support ticket review, and usability sessions with kids. Three things stood out: removing games directly correlated with shorter sessions and higher drop-off, the new text-heavy navigation created real friction for non-readers, and the migration had also quietly built a backend that could support faster delivery later if I used it right.</p>
+  <p>Leadership pushed back on my initial recovery plan over complexity and cost. I repositioned the apps as the entry point into Paramount's streaming ecosystem: the place families landed before they were ready to pay for Paramount+ or Noggin. That got buy-in from product leadership, engineering, QA, web, legal, backend, and design.</p>
+  <p>The plan called for restoring native mobile games, but rebuilding the legacy games for the new codebase would have taken far more engineering time for limited long-term value. I chose HTML5 web games delivered through a custom mobile wrapper: it shipped faster and gave us something reusable for future projects.</p>
+  <p>I led 12 engineers across iOS and Android, plus QA, web, backend, and design partners, over about a year for the first two phases. The web team was the biggest dependency for the games wrapper, so I built that relationship early, before any risk showed up. It paid off: when delivery started slipping, I found the cause was resourcing on the web side. So I had my own engineers pick up some of the wrapper work to keep the timeline intact.</p>
+  <h3>Where it landed</h3>
+  <ul>
+    <li>+18% engagement time: 5.5M additional minutes per month, from around 30M to over 36M</li>
+    <li>App store ratings recovered above 4 stars</li>
+    <li>$125K to $250K in new annual ad revenue</li>
+    <li>Repositioned the apps from maintenance mode to a strategic part of Paramount's ecosystem</li>
+  </ul>
+  <blockquote>"What sets Matt apart is his deep technical expertise. He understands the intricacies of engineering and knows how to communicate them to non-technical stakeholders. That blend of technical knowledge and communication lets him connect product and engineering, and makes sure everyone on the team is working toward the same goal."<cite>Adrian Cireasa, Project Manager, Nickelodeon</cite></blockquote>
+</template>
+
+<template id="story-sbu" data-icons="sbu" data-zone="nick" data-eyebrow="Nickelodeon / Paramount · 2016–2023" data-title="Proving a $5M game had an audience before it launched">
+  <h3>The setup</h3>
+  <p>I was in Product Management and Partnerships at Nickelodeon, leading cross-functional development and product strategy for Super Brawl Universe, a cross-IP mobile brawler that brought SpongeBob, TMNT, and other Nick favorites into one game. It was Nickelodeon's first large-scale kids' mobile launch in years, a $5M+ development and marketing investment. As launch got closer, leadership started to question whether there was enough demand to justify the marketing spend. We were too far in to pull the plug, but not too late to scale back. If the game underperformed, it could set back future mobile investment for years.</p>
+  <h3>What I did</h3>
+  <p>I benchmarked competing action and brawler titles in App Annie for downloads, retention, and monetization, shared beta builds with Google, Apple, and Amazon to gauge positioning, and tested early concepts with kids. Three things stood out: brawlers that paired recognizable characters with accessible gameplay held 2–3x the retention of typical casual games, featuring in the app stores decided which games in this category lived or died, and the characters we put in our store art changed conversion.</p>
+  <p>So I built the plan around validation, visibility, and conversion: a pre-registration campaign with a Day 1 reward to prove demand early, a platform partnership plan where I pitched Google, Apple, and Amazon and negotiated featuring windows, and icon A/B tests to find the character mix that converted best. Some stakeholders questioned pre-registration, so I brought data from recent competitor pre-reg successes and showed how little effort it would take on our side. That got marketing, leadership, and our external dev partner aligned.</p>
+  <p>The icon tests produced the hardest call. My instinct favored TMNT and Patrick Star, but SpongeBob, Danny Phantom, and Korra converted higher. I switched right away. During beta I gave the dev team structured feedback on the first-time experience, chest flows, and tutorial bugs so kids would stick around. By launch day, user acquisition ($150K in month one), platform featuring, and marketing (Nick TV, YouTube trailers, a Times Square billboard) all landed together.</p>
+  <h3>Where it landed</h3>
+  <ul>
+    <li>1.5M pre-registrations, turning into about 630K first-week installs (~42% conversion)</li>
+    <li>Featured by Google Play, the App Store, and Amazon, and later showcased at Google I/O as a pre-registration success story</li>
+    <li>Pre-registered players retained about 20% better than organic users: ~45% D1, 20–24% D7, 7–9% D30, above 2019 benchmarks for kids' action titles</li>
+    <li>Nickelodeon's largest mobile launch in years, which restored leadership's confidence to fund future cross-IP big swings</li>
+  </ul>
+  <blockquote>"His ability to clearly articulate the product vision was instrumental in aligning our team."<cite>Ben Clissen, Senior Technical PM, Paramount Global</cite></blockquote>
+</template>
+
+<div class="story" id="story" role="dialog" aria-modal="true" aria-labelledby="story-title" hidden>
+  <div class="story-inner">
+    <button class="story-close" id="story-close" type="button" aria-label="Close the story">✕</button>
+    <p class="eyebrow" id="story-eyebrow"></p>
+    <h2 id="story-title"></h2>
+    <div class="story-body" id="story-body"></div>
+    <div class="story-foot"><button class="btn" id="story-back" type="button">Back to the tunnel</button><div class="app-icons" id="story-icons"></div></div>
+  </div>
+</div>
+
+<div class="spacer" id="spacer" aria-hidden="true"></div>
+
+<div class="rest">
+  <section class="band" id="building">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Building</p>
+        <h2>Problems I solved anyway</h2>
+      </div>
+      <div class="grid">
+        <article class="proj"><span class="status">Agent</span><h3>Jira Story Generator</h3><p>Reads Figma files and writes structured Jira stories.</p><div class="tags"><span class="tag">AI Agent</span><span class="tag">Figma</span><span class="tag">Jira</span></div></article>
+        <article class="proj"><span class="status">In progress</span><h3>Jira Response Tracker</h3><p>Finds Jira threads that still wait for an answer.</p><div class="tags"><span class="tag">AI Agent</span><span class="tag">Async Workflows</span></div></article>
+        <article class="proj"><span class="status">Agent</span><h3>Digital Chief of Staff</h3><p>A personal AI coach for planning and priorities.</p><div class="tags"><span class="tag">AI Agent</span><span class="tag">Personal OS</span></div></article>
+        <article class="proj"><span class="status">Live</span><h3>SwiftRead</h3><p>A speed-reading web app.</p><div class="tags"><span class="tag">Web App</span></div><a href="https://swift-read.netlify.app/" target="_blank" rel="noopener">Visit site →</a></article>
+        <article class="proj"><span class="status">Shortcut</span><h3>TempPhoto</h3><p>An iOS Shortcut that deletes photos after a set time.</p><div class="tags"><span class="tag">iOS</span><span class="tag">Automation</span></div></article>
+        <article class="proj"><span class="status">Live</span><h3>Vesper Standard Time</h3><p>A different fix for daylight saving time: clocks shift about 20 seconds a night.</p><div class="tags"><span class="tag">Original Concept</span><span class="tag">Web App</span></div><a href="https://vesperstandardtime.com/" target="_blank" rel="noopener">Visit site →</a></article>
+        <article class="proj"><span class="status">Live</span><h3>AERO 16</h3><p>A daily grid logic puzzle that explains wrong answers and counts your streak.</p><div class="tags"><span class="tag">React</span><span class="tag">Vite</span><span class="tag">Tailwind</span></div><a href="https://aero-16.netlify.app/" target="_blank" rel="noopener">Visit site →</a></article>
+        <article class="proj"><span class="status">In progress</span><h3>Krisys</h3><p>A Twitch extension. Debaters' arguments go to Claude, which breaks them down live.</p><div class="tags"><span class="tag">Twitch</span><span class="tag">Claude API</span><span class="tag">Whisper API</span></div></article>
+        <article class="proj"><span class="status">In progress</span><h3>FamilyTime</h3><p>Time-of-day limits, per-app controls, and usage views for parents on iOS.</p><div class="tags"><span class="tag">iOS</span><span class="tag">SwiftUI</span><span class="tag">FamilyControls</span></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="about">
+    <div class="wrap about">
+      <div>
+        <p class="eyebrow">About</p>
+        <h2>Hi, I'm Matt.</h2>
+        <p>I'm a senior PM with 10+ years in streaming. I lead with user empathy, product instinct, and data.</p>
+        <p>Off the clock I read classic sci-fi, do puzzles, and try every new AI tool. I once lived in a caravan in the desert for a year.</p>
+        <div class="tags" style="margin-top:1.4rem">
+          <a class="btn ghost" href="https://www.linkedin.com/in/englermatthew" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn ghost" href="Matthew%20Engler%20-%20Resume.pdf" target="_blank" rel="noopener">Resume (PDF)</a>
+        </div>
+      </div>
+      <ul class="stats">
+        <li><b>10+</b><span>years in streaming &amp; CTV</span></li>
+        <li><b>3</b><span>major platforms launched</span></li>
+        <li><b>∞</b><span>corners seen</span></li>
       </ul>
     </div>
-  </nav>
-
-  <!-- ============================================================
-       HERO
-       ============================================================ -->
-  <section class="hero" id="home">
-    <div class="hero__grain"></div>
-    <div class="hero__glow"></div>
-
-    <div class="hero__inner">
-      <p class="hero__label">Senior Technical PM &nbsp;·&nbsp; NBA &nbsp;·&nbsp; Tubi &nbsp;·&nbsp; Nickelodeon</p>
-
-      <h1 class="hero__headline">
-        <div class="hero__quote-mask"></div>
-        <span class="hero__line">I see around</span>
-        <span class="hero__line hero__line--accent">corners.</span>
-        <span class="hero__line hero__line--sub">Then I bring everyone else along.</span>
-      </h1>
-
-      <div class="hero__actions">
-        <a href="#work" class="btn btn--primary">View my work</a>
-        <a href="#contact" class="btn btn--ghost">Get in touch</a>
-      </div>
-    </div>
-
-    <div class="hero__scroll" aria-hidden="true">
-      <span>scroll</span>
-      <div class="hero__scroll-line"></div>
-    </div>
   </section>
 
-  <!-- ============================================================
-       WORK
-       ============================================================ -->
-  <section class="section work" id="work">
-    <div class="section__inner">
-
-      <div class="section__header fade-up">
-        <span class="section__eyebrow">Selected Work</span>
-        <h2 class="section__title">The corners<br><em>I've seen.</em></h2>
-        <p class="section__desc">Each project started with an insight others had overlooked. Here's how I found them — and what happened when I did.</p>
+  <section class="band" id="praise">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Recommendations</p>
+        <h2>What people actually say.</h2>
       </div>
-
-      <div class="case-studies">
-
-        <article class="case-study fade-up">
-          <div class="case-study__meta">
-            <span class="case-study__num">01</span>
-            <span class="case-study__company">NBA / WNBA</span>
-            <span class="case-study__year">2025–Present</span>
-          </div>
-          <div class="case-study__content">
-            <h3 class="case-study__title">Building the WNBA's streaming home, from scratch</h3>
-            <p class="case-study__desc">The WNBA's CTV app ran on a third-party platform that capped control over the fan experience and the roadmap. I led the team that rebuilt it in-house before the 2026 season.</p>
-            <div class="case-study__tags">
-              <span class="tag">Platform Architecture</span>
-              <span class="tag">CTV</span>
-              <span class="tag">Identity &amp; Entitlements</span>
-            </div>
-          </div>
-          <div class="case-study__stat">
-            <span class="stat__value">100K+</span>
-            <span class="stat__label">fans watching concurrently on opening night</span>
-          </div>
-          <button class="case-study__link" type="button" id="cs-btn-01" aria-expanded="false" aria-controls="cs-panel-01">Read the story →</button>
-          <div class="case-study__panel" id="cs-panel-01" role="region" aria-labelledby="cs-btn-01">
-            <div class="case-study__panel-inner">
-              <div class="case-study__panel-content">
-                <div class="case-study__panel-eyebrow">The setup</div>
-                <p class="case-study__panel-text">The WNBA's connected TV app ran on a third-party vendor's platform. That capped the league's control over the fan experience, the roadmap, and monetization, right as audience and ad demand were both growing fast.</p>
-                <div class="case-study__panel-eyebrow">What I did</div>
-                <p class="case-study__panel-text">I led the rebuild: 9 teams across engineering, ads, identity, analytics, feeds, design, legal, and marketing, with a deadline tied to the start of the season. I started with a teardown of the existing WNBA and NBA apps to map the fan journey and define what the new platform actually needed: onboarding, navigation, live and VOD playback, in-app purchases, stats. From there I split the rebuild into 3 MVP phases with cross-team demos after each, so we could catch problems before they compounded.</p>
-                <p class="case-study__panel-text">Midway through planning, leadership pushed hard for Multiview at launch since it had worked well on the NBA app. I held it back. The WNBA has far fewer concurrent games than the NBA, so the payoff was unproven, and pulling engineers off resume watching (which fans rely on every time they jump back into a live game) would have put core playback at risk for a feature with no validated demand. Multiview moved to post-launch, pending real usage data.</p>
-                <div class="case-study__panel-eyebrow">Where it landed</div>
-                <ul class="case-study__panel-list">
-                  <li>100K+ concurrent fans on opening night</li>
-                  <li>Estimated 3.1M ad impressions and $80K to $100K in ad revenue on day one</li>
-                  <li>Full in-house control of the tech, the roadmap, and monetization</li>
-                  <li>The same architecture can support launches for other leagues and teams</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="case-study fade-up">
-          <div class="case-study__meta">
-            <span class="case-study__num">02</span>
-            <span class="case-study__company">Nickelodeon / Paramount</span>
-            <span class="case-study__year">2016–2023</span>
-          </div>
-          <div class="case-study__content">
-            <h3 class="case-study__title">Relaunching Nick's app when no one else thought it needed it</h3>
-            <p class="case-study__desc">Video, games, and discovery had become three separate products living inside one app. I unified them into a platform kids actually wanted to spend time in.</p>
-            <div class="case-study__tags">
-              <span class="tag">UX Strategy</span>
-              <span class="tag">Kids Platform</span>
-              <span class="tag">Engagement</span>
-            </div>
-          </div>
-          <div class="case-study__stat">
-            <span class="stat__value">+18%</span>
-            <span class="stat__label">engagement · 5.5M new monthly minutes · $125K–$250K new ad revenue</span>
-          </div>
-          <button class="case-study__link" type="button" id="cs-btn-02" aria-expanded="false" aria-controls="cs-panel-02">Read the story →</button>
-          <div class="case-study__panel" id="cs-panel-02" role="region" aria-labelledby="cs-btn-02">
-            <div class="case-study__panel-inner">
-              <div class="case-study__panel-content">
-                <div class="case-study__panel-eyebrow">The setup</div>
-                <p class="case-study__panel-text">I joined Nickelodeon right after Nick and Nick Jr. migrated onto Paramount's shared streaming platform. The migration standardized backend services across brands like MTV and Comedy Central, but it also stripped out the kid-first experience that set our apps apart: games, search, and simple navigation got replaced with text-heavy interfaces young kids couldn't use. Engagement and app store ratings both dropped, and the apps went into maintenance mode with no recovery plan.</p>
-                <div class="case-study__panel-eyebrow">What I did</div>
-                <p class="case-study__panel-text">I compared pre- and post-migration engagement data with the analytics team, then ran app store review analysis, support ticket review, and usability sessions with kids. Three things stood out: removing games directly correlated with shorter sessions and higher drop-off, the new text-heavy navigation created real friction for non-readers, and the migration had also quietly built a backend that could support faster delivery later if I used it right.</p>
-                <p class="case-study__panel-text">Leadership pushed back on my initial recovery plan over complexity and cost. I repositioned the apps as the entry point into Paramount's streaming ecosystem: the place families landed before they were ready to pay for Paramount+ or Noggin. That got buy-in from product leadership, engineering, QA, web, legal, backend, and design.</p>
-                <p class="case-study__panel-text">The plan called for restoring native mobile games, but rebuilding the legacy games for the new codebase would have taken far more engineering time for limited long-term value. I chose HTML5 web games delivered through a custom mobile wrapper: it shipped faster and gave us something reusable for future projects.</p>
-                <p class="case-study__panel-text">I led 12 engineers across iOS and Android, plus QA, web, backend, and design partners, over about a year for the first two phases. The web team was the biggest dependency for the games wrapper, so I built that relationship early, before any risk showed up. It paid off: when delivery started slipping, I found the cause was resourcing on the web side. So I had my own engineers pick up some of the wrapper work to keep the timeline intact.</p>
-                <div class="case-study__panel-eyebrow">Where it landed</div>
-                <ul class="case-study__panel-list">
-                  <li>+18% engagement time: 5.5M additional minutes per month, from around 30M to over 36M</li>
-                  <li>App store ratings recovered above 4 stars</li>
-                  <li>$125K to $250K in new annual ad revenue</li>
-                  <li>Repositioned the apps from maintenance mode to a strategic part of Paramount's ecosystem</li>
-                </ul>
-                <blockquote class="case-study__quote">
-                  <p>"What sets Matt apart is his deep technical expertise. He understands the intricacies of engineering and knows how to communicate them to non-technical stakeholders. That blend of technical knowledge and communication lets him connect product and engineering, and makes sure everyone on the team is working toward the same goal."</p>
-                  <cite>— Adrian Cireasa, Project Manager, Nickelodeon</cite>
-                </blockquote>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="case-study fade-up">
-          <div class="case-study__meta">
-            <span class="case-study__num">03</span>
-            <span class="case-study__company">Tubi</span>
-            <span class="case-study__year">2023–2024</span>
-          </div>
-          <div class="case-study__content">
-            <h3 class="case-study__title">The bottleneck hiding in plain sight on Fire TV</h3>
-            <p class="case-study__desc">A technical constraint in how Tubi ingested channels was quietly capping revenue and discoverability. Fixing it required rethinking the entire distribution strategy — and convincing Amazon to come along.</p>
-            <div class="case-study__tags">
-              <span class="tag">Distribution</span>
-              <span class="tag">Partner Integration</span>
-              <span class="tag">Growth</span>
-            </div>
-          </div>
-          <div class="case-study__stat">
-            <span class="stat__value">+20%</span>
-            <span class="stat__label">traffic and revenue growth on Fire TV Live Tab</span>
-          </div>
-          <button class="case-study__link" type="button" id="cs-btn-03" aria-expanded="false" aria-controls="cs-panel-03">Read the story →</button>
-          <div class="case-study__panel" id="cs-panel-03" role="region" aria-labelledby="cs-btn-03">
-            <div class="case-study__panel-inner">
-              <div class="case-study__panel-content">
-                <div class="case-study__panel-eyebrow">The setup</div>
-                <p class="case-study__panel-text">Tubi's Fire TV Live Tab traffic was dropping fast, on a platform reaching millions of CTV users where Amazon's Live Tab had become a major discovery surface for us.</p>
-                <div class="case-study__panel-eyebrow">What I did</div>
-                <p class="case-study__panel-text">I worked with Data Science, Engineering, and Amazon's Live platform team to trace the full path from discovery to tune-in. We ruled out a recent update from our news team early on. Amazon's manual channel ingestion was capping us at around 50 channels, leaving many of our best-performing feeds invisible on the Live Tab. Engineering confirmed it wasn't a bug: our reliance on non-Gracenote IDs meant we couldn't scale ingestion on Amazon's system at all.</p>
-                <p class="case-study__panel-text">The fix meant trading a high-performing channel that didn't have a Gracenote ID for triple the overall channel coverage. I made that call: a short-term loss for long-term scale and credibility with Amazon. It got fast buy-in across Content, Live Ops, and Amazon itself.</p>
-                <p class="case-study__panel-text">When Amazon needed extra backend work to support channel-order testing, I prioritized speed to catch an upcoming traffic window and pushed ordering optimization to a second phase. We launched in a single push, since the platform didn't support a staged rollout, and managed risk with frequent updates instead.</p>
-                <div class="case-study__panel-eyebrow">Where it landed</div>
-                <ul class="case-study__panel-list">
-                  <li>+20% traffic and ad revenue lift within days</li>
-                  <li>Tripled the overall channel catalog</li>
-                  <li>Amazon cited the update as a model response to platform feedback</li>
-                  <li>Strengthened the case for continued investment in Live</li>
-                </ul>
-                <blockquote class="case-study__quote">
-                  <p>"Whether it was engaging with stakeholders, negotiating priorities, or providing updates to leadership, he did so with confidence and clarity."</p>
-                  <cite>— Ben Clissen, Senior Technical Project Manager, Nickelodeon</cite>
-                </blockquote>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="case-study fade-up">
-          <div class="case-study__meta">
-            <span class="case-study__num">04</span>
-            <span class="case-study__company">Tubi</span>
-            <span class="case-study__year">2023</span>
-          </div>
-          <div class="case-study__content">
-            <h3 class="case-study__title">Launching on Vision Pro when no one wanted to own it</h3>
-            <p class="case-study__desc">Mid-crunch. New platform. Major partner commitment on the line. No clear owner. I stepped in, drove alignment across design and engineering, and shipped — on time, with Apple's editorial backing to prove it.</p>
-            <div class="case-study__tags">
-              <span class="tag">New Platform Launch</span>
-              <span class="tag">Partner Management</span>
-              <span class="tag">Execution</span>
-            </div>
-          </div>
-          <div class="case-study__stat">
-            <span class="stat__value">$150K+</span>
-            <span class="stat__label">in additional Apple editorial support earned at launch</span>
-          </div>
-          <button class="case-study__link" type="button" id="cs-btn-04" aria-expanded="false" aria-controls="cs-panel-04">Read the story →</button>
-          <div class="case-study__panel" id="cs-panel-04" role="region" aria-labelledby="cs-btn-04">
-            <div class="case-study__panel-inner">
-              <div class="case-study__panel-content">
-                <div class="case-study__panel-eyebrow">The setup</div>
-                <p class="case-study__panel-text">My boss had been leading our push to launch on Apple Vision Pro. The day leadership finally approved it, she was on vacation, which left a real leadership gap right as the clock started on a deadline tied to hundreds of thousands of dollars in current and future Apple editorial promotions.</p>
-                <div class="case-study__panel-eyebrow">What I did</div>
-                <p class="case-study__panel-text">I stepped in immediately. I reviewed the existing documentation and go-to-market plan, then met with engineering, marketing, product leadership, legal, and content, including late-night syncs with engineers in Beijing, to check our workstreams against Apple's expectations. Three gaps showed up fast: our go-to-market plan no longer matched Apple's positioning for Vision Pro, milestone ownership was unclear, and a couple of deliverables tied to editorial exposure were at risk of getting missed.</p>
-                <p class="case-study__panel-text">Some people questioned whether we should keep moving without my boss in the loop. I addressed it directly, told the team I had her confidence, and we kept moving. I rebuilt the go-to-market plan with Marketing around Apple's editorial and technical priorities, built a workback schedule that made ownership clear, and ran weekly cross-functional syncs to keep deliverables on track.</p>
-                <p class="case-study__panel-text">One open question was the storefront art: match our existing platform style, or lead with Vision Pro's AR features. I'd already helped Design clear lower-priority work off their plate so they had room to build both versions, and we ran an A/B test at launch rather than picking based on opinion. The AR-focused design won.</p>
-                <div class="case-study__panel-eyebrow">Where it landed</div>
-                <ul class="case-study__panel-list">
-                  <li>Launched on time, meeting our commitment to Apple</li>
-                  <li>$150K+ in new editorial promotional value from Apple</li>
-                  <li>Strengthened the partnership and opened the door to future high-visibility placements</li>
-                  <li>Vision Pro itself had a limited user base, as expected; the promotions still drove a noticeable lift in downloads elsewhere</li>
-                </ul>
-                <blockquote class="case-study__quote">
-                  <p>"He never shied away from a challenge, happily stepping up to lead when there was a vacuum, like shepherding the Vision Pro launch across the finish line."</p>
-                  <cite>— David Golan, Senior Product Manager, Tubi</cite>
-                </blockquote>
-              </div>
-            </div>
-          </div>
-        </article>
-
+      <div class="quotes">
+        <figure class="quote feature"><blockquote><p>"Matt hit the ground running immediately and worked to develop dynamic relationships across the organization. Those relationships allowed him to lead a multi-faceted team that was confident in his guidance, while he ensured direction was clear and collaborative. As a result, the application was delivered on-time and exceeded expectations across the board."</p></blockquote><figcaption><b>Kyle Magee</b><span>Digital Product Leader, NBA · managed Matt directly</span></figcaption></figure>
+        <figure class="quote"><blockquote>"I had the pleasure of working closely with Matt, and I can confidently say that he is one of the most exceptional product managers I've encountered. His ability to navigate the complexities of product development while maintaining a clear focus on the user and business goals is truly remarkable. Beyond his technical prowess, Matt's leadership style fosters trust and collaboration."</blockquote><figcaption><b>Adrian Cireasa</b><span>Project Manager, Nickelodeon</span></figcaption></figure>
+        <figure class="quote"><blockquote>"At Tubi, he demonstrated his ability to drive significant results with key partners like Amazon and Apple. He never shied away from a challenge, happily stepping up to lead when there was a vacuum, like shepherding the Vision Pro launch across the finish line."</blockquote><figcaption><b>David Golan</b><span>Senior Product Manager, Tubi</span></figcaption></figure>
+        <figure class="quote"><blockquote>"His ability to clearly articulate the product vision was instrumental in aligning our team. Whether engaging with stakeholders, negotiating priorities, or updating leadership, he did so with confidence and clarity."</blockquote><figcaption><b>Ben Clissen</b><span>Senior Technical PM, Paramount Global</span></figcaption></figure>
+        <figure class="quote"><blockquote>"As a designer, I relied on information that would help develop better designs and Matthew was a pivotal point of contact for all creative needs. His communication and collaborative efforts really refined our design process."</blockquote><figcaption><b>Rebecca Laval</b><span>Product Design, Tubi</span></figcaption></figure>
+        <figure class="quote"><blockquote>"Matthew led experiments to improve conversion metrics on our various app stores, leading ideation and pressure-testing creative theories. As Tubi expands globally, we have Matthew to thank for laying the foundation of our App Store efforts."</blockquote><figcaption><b>Dan Bowman</b><span>Product Growth, Tubi</span></figcaption></figure>
+        <figure class="quote"><blockquote>"Matt created very clear and well-documented tickets. He was ready to jump on a call any time we had misunderstandings and had a very positive attitude. He will bring a lot of value through his vast experience, knowledge, kindness, and patience."</blockquote><figcaption><b>Diana Daia</b><span>iOS Software Engineer, Cognizant / Nickelodeon</span></figcaption></figure>
       </div>
     </div>
   </section>
 
-  <!-- ============================================================
-       AI BUILDING
-       ============================================================ -->
-  <section class="section ai-building" id="ai">
-    <div class="section__inner">
-
-      <div class="section__header fade-up">
-        <span class="section__eyebrow">Building</span>
-        <h2 class="section__title">Problems I solved<br><em>anyway.</em></h2>
-        <p class="section__desc">I don't wait for a roadmap to ship a fix. These are the tools, agents, and experiments I've built because the problem was sitting right there.</p>
-      </div>
-
-      <div class="ai-projects">
-
-        <article class="ai-project fade-up">
-          <div class="ai-project__icon">⚙</div>
-          <div class="ai-project__content">
-            <h3 class="ai-project__title">Jira Story Generator</h3>
-            <p class="ai-project__desc">Design-to-dev handoff was slow and inconsistent. Built an agent that reads Figma files and auto-generates structured Jira stories — reducing a multi-hour process to minutes.</p>
-            <div class="case-study__tags">
-              <span class="tag">AI Agent</span>
-              <span class="tag">Figma</span>
-              <span class="tag">Jira</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="ai-project fade-up">
-          <div class="ai-project__icon">◎</div>
-          <div class="ai-project__content">
-            <h3 class="ai-project__title">Jira Response Tracker</h3>
-            <p class="ai-project__desc">Comments I left on tickets were falling into the void with no follow-up. Building an agent that surfaces unanswered threads so nothing gets dropped between teams.</p>
-            <div class="case-study__tags">
-              <span class="tag">AI Agent</span>
-              <span class="tag">Jira</span>
-              <span class="tag">Async Workflows</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="ai-project fade-up">
-          <div class="ai-project__icon">◈</div>
-          <div class="ai-project__content">
-            <h3 class="ai-project__title">Digital Chief of Staff</h3>
-            <p class="ai-project__desc">Managing my own priorities felt as chaotic as managing a product. Built a personal AI productivity coach that helps me plan, prioritize, and stay focused — treating myself like a stakeholder.</p>
-            <div class="case-study__tags">
-              <span class="tag">AI Agent</span>
-              <span class="tag">Productivity</span>
-              <span class="tag">Personal OS</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="ai-project fade-up">
-          <div class="ai-project__icon">◇</div>
-          <div class="ai-project__content">
-            <h3 class="ai-project__title">SwiftRead</h3>
-            <p class="ai-project__desc">Too much to read, not enough time. Built a speed reading app to improve information throughput, because staying ahead means actually reading the things you save.</p>
-            <div class="case-study__tags">
-              <span class="tag">Web App</span>
-              <span class="tag">Swift</span>
-              <span class="tag">Reading</span>
-            </div>
-            <a href="https://swift-read.netlify.app/" class="case-study__link" target="_blank" rel="noopener">Visit site →</a>
-          </div>
-        </article>
-
-        <article class="ai-project fade-up">
-          <div class="ai-project__icon">⊘</div>
-          <div class="ai-project__content">
-            <h3 class="ai-project__title">TempPhoto</h3>
-            <p class="ai-project__desc">iOS has no native way to mark a photo as temporary — they either live forever or require manual cleanup. Built a Shortcut that auto-deletes photos after a set time. Apple still hasn't shipped this.</p>
-            <div class="case-study__tags">
-              <span class="tag">iOS Shortcut</span>
-              <span class="tag">Automation</span>
-              <span class="tag">UX Gap</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="ai-project fade-up">
-          <div class="ai-project__icon">◐</div>
-          <div class="ai-project__content">
-            <h3 class="ai-project__title">Vesper Standard Time</h3>
-            <p class="ai-project__desc">Daylight saving time forces a jarring 60-minute jump twice a year, with real costs to sleep and safety. I designed an alternative: clocks shift by about 20 seconds a night instead, small enough that nobody notices and nobody resets a clock.</p>
-            <div class="case-study__tags">
-              <span class="tag">Original Concept</span>
-              <span class="tag">Web App</span>
-              <span class="tag">Public Launch</span>
-            </div>
-            <a href="https://vesperstandardtime.com/" class="case-study__link" target="_blank" rel="noopener">Visit site →</a>
-          </div>
-        </article>
-
-        <article class="ai-project fade-up">
-          <div class="ai-project__icon">◆</div>
-          <div class="ai-project__content">
-            <h3 class="ai-project__title">AERO 16</h3>
-            <p class="ai-project__desc">A daily logic puzzle game built for my son. Each puzzle is a grid where every row and column has to add up to a target number. Grids vary in size. Wrong answers come with an explanation of why, not just a red X. Includes a tutorial system and a daily streak counter.</p>
-            <div class="case-study__tags">
-              <span class="tag">React</span>
-              <span class="tag">Vite</span>
-              <span class="tag">Tailwind</span>
-              <span class="tag">Web App</span>
-            </div>
-            <a href="https://aero-16.netlify.app/" class="case-study__link" target="_blank" rel="noopener">Visit site →</a>
-          </div>
-        </article>
-
-        <article class="ai-project ai-project--wip fade-up">
-          <div class="ai-project__wip-badge">In progress</div>
-          <div class="ai-project__icon">⚖</div>
-          <div class="ai-project__content">
-            <h3 class="ai-project__title">Krisys</h3>
-            <p class="ai-project__desc">A Twitch extension built around a simple idea: people argue past each other because they never have to genuinely reckon with the other side. Krisys forces that moment. Each side argues, gets transcribed, and Claude delivers a breakdown. Before the winner is revealed, each debater has to read aloud what they got wrong and what the other side got right.</p>
-            <div class="case-study__tags">
-              <span class="tag">Twitch Extension</span>
-              <span class="tag">Claude API</span>
-              <span class="tag">Whisper API</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="ai-project ai-project--wip fade-up">
-          <div class="ai-project__wip-badge">In progress</div>
-          <div class="ai-project__icon">⏱</div>
-          <div class="ai-project__content">
-            <h3 class="ai-project__title">FamilyTime</h3>
-            <p class="ai-project__desc">Apple's Screen Time gives parents three blunt choices when a kid asks for more time, with no usage context and no granularity. FamilyTime replaces that with time-of-day limits, per-app controls, and a full usage breakdown before a parent approves or denies anything.</p>
-            <div class="case-study__tags">
-              <span class="tag">iOS</span>
-              <span class="tag">FamilyControls API</span>
-              <span class="tag">SwiftUI</span>
-            </div>
-          </div>
-        </article>
-
+  <section class="band" id="contact">
+    <div class="wrap contact">
+      <p class="eyebrow">Contact</p>
+      <h2>Let's talk corners.</h2>
+      <p>I'm looking at Director of Product and Senior PM roles in streaming, CTV, and platform products.</p>
+      <div class="mail">
+        <code id="email">Matt@ProductMattager.com</code>
+        <button class="btn" id="copy" type="button">Copy email</button>
+        <a class="btn ghost" href="https://www.linkedin.com/in/englermatthew" target="_blank" rel="noopener">LinkedIn</a>
       </div>
     </div>
   </section>
 
-  <!-- ============================================================
-       ABOUT
-       ============================================================ -->
-  <section class="section about" id="about">
-    <div class="about__glow"></div>
-    <div class="section__inner about__inner">
+  <footer>Matt Engler © 2026. Product Mattager.</footer>
+</div>
+</main>
 
-      <div class="about__text fade-up">
-        <span class="section__eyebrow">About</span>
-        <h2 class="section__title">Hi, I'm Matt.</h2>
-        <p class="about__tagline">If it's got a screen, I've made it stream better.</p>
-        <p class="about__lead">I'm a Senior PM who specializes in what most product playbooks skip: seeing the problem beneath the problem, then rallying everyone else around the solution.</p>
-        <p>10+ years building streaming experiences for some of the biggest names in entertainment — from Nickelodeon's kids apps to Tubi's CTV growth engine to the WNBA's brand-new in-house streaming platform.</p>
-        <p>I lead with user empathy, product instinct, and data — usually in that order. I'm at my best when the problem is messy, the path isn't obvious, and the stakes are real.</p>
-        <p class="about__personal">Outside of product: I read classic sci-fi, get lost in puzzles, and collect new AI tools faster than I can use them. Oh — and I once spent a full year living in a caravan in the desert. Yes, there were camels.</p>
-        <div class="about__links">
-          <a href="https://linkedin.com/in/englermatthew" class="btn btn--ghost" target="_blank" rel="noopener">LinkedIn →</a>
-          <a href="Matthew Engler - Resume.pdf" class="btn btn--ghost" download>Download resume</a>
-        </div>
-      </div>
+<div class="gauge" id="gauge" aria-hidden="true"><b id="era">NBA</b><span id="year">2026</span></div>
 
-      <div class="about__aside fade-up">
-        <div class="about__stats">
-          <div class="about__stat">
-            <span class="about__stat-num">10+</span>
-            <span class="about__stat-label">years in streaming &amp; CTV</span>
-          </div>
-          <div class="about__stat">
-            <span class="about__stat-num">3</span>
-            <span class="about__stat-label">major platforms launched</span>
-          </div>
-          <div class="about__stat">
-            <span class="about__stat-num">∞</span>
-            <span class="about__stat-label">corners seen</span>
-          </div>
-        </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/objects/Reflector.js"></script>
+<script>
+(function () {
+  // ---------- copy email ----------
+  var copyBtn = document.getElementById('copy');
+  copyBtn.addEventListener('click', function () {
+    var el = document.getElementById('email');
+    function done() { copyBtn.textContent = 'Copied'; setTimeout(function () { copyBtn.textContent = 'Copy email'; }, 1600); }
+    function selectIt() { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+    try { navigator.clipboard.writeText(el.textContent).then(done, selectIt); } catch (e) { selectIt(); }
+  });
 
-        <blockquote class="about__quote">
-          <p>"His ability to navigate the complexities of product development while maintaining a clear focus on the user and business goals is truly remarkable."</p>
-          <cite>— Adrian Cireasa, Project Manager @ Nickelodeon</cite>
-        </blockquote>
-      </div>
+  // ---------- story panel ----------
+  var story = document.getElementById('story'), lastOpener = null;
+  function openStory(key, opener) {
+    var tpl = document.getElementById('story-' + key);
+    if (!tpl) return;
+    story.dataset.zone = tpl.dataset.zone;
+    var ic = document.getElementById('story-icons'); ic.innerHTML = '';
+    (tpl.dataset.icons || '').split(',').filter(Boolean).forEach(function (k) {
+      var im = document.createElement('img'); im.src = 'icons/' + k + '.png'; im.alt = ''; im.width = 52; im.height = 52; ic.appendChild(im);
+    });
+    document.getElementById('story-eyebrow').textContent = tpl.dataset.eyebrow;
+    document.getElementById('story-title').textContent = tpl.dataset.title;
+    var body = document.getElementById('story-body');
+    body.innerHTML = '';
+    body.appendChild(tpl.content.cloneNode(true));
+    story.hidden = false;
+    story.scrollTop = 0;
+    document.documentElement.classList.add('reading');
+    lastOpener = opener;
+    document.getElementById('story-close').focus();
+  }
+  function closeStory() {
+    if (story.hidden) return;
+    story.hidden = true;
+    document.documentElement.classList.remove('reading');
+    if (lastOpener) lastOpener.focus({ preventScroll: true });
+  }
+  document.querySelectorAll('[data-story]').forEach(function (b) {
+    b.addEventListener('click', function () { openStory(b.dataset.story, b); });
+  });
+  document.getElementById('story-close').addEventListener('click', closeStory);
+  document.getElementById('story-back').addEventListener('click', closeStory);
+  story.addEventListener('click', function (e) { if (e.target === story) closeStory(); });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') closeStory(); });
 
-    </div>
-  </section>
+  // ---------- page refs ----------
+  var spacer = document.getElementById('spacer');
+  var rail = document.getElementById('rail');
+  var railBtns = [].slice.call(rail.querySelectorAll('button'));
+  var stage = document.getElementById('stage');
+  var gauge = document.getElementById('gauge');
+  var eraEl = document.getElementById('era'), yearEl = document.getElementById('year');
+  var cue = document.getElementById('cue');
+  var veil = document.getElementById('veil');
+  var slimeCv = document.getElementById('slime');
 
-  <!-- ============================================================
-       PRAISE / RECOMMENDATIONS
-       ============================================================ -->
-  <section class="section praise" id="praise">
-    <div class="section__inner">
+  function jumpTo(id) {
+    var el = document.getElementById(id);
+    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + scrollY, behavior: 'smooth' });
+  }
+  document.querySelectorAll('[data-jump]').forEach(function (b) {
+    b.addEventListener('click', function (e) { e.preventDefault(); jumpTo(b.dataset.jump); });
+  });
+  document.querySelector('.brand').addEventListener('click', function (e) { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
-      <div class="section__header fade-up">
-        <span class="section__eyebrow">Recommendations</span>
-        <h2 class="section__title">What people<br><em>actually say.</em></h2>
-      </div>
+  var canvas = document.getElementById('scene');
+  var renderer;
+  try {
+    if (!window.THREE) throw new Error('no three');
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, powerPreference: 'high-performance' });
+  } catch (e) {
+    document.documentElement.classList.add('nogl');
+    railBtns.forEach(function (b) {
+      if (b.dataset.stop != null) b.addEventListener('click', function () {
+        var c = stage.querySelectorAll('.card')[+b.dataset.stop];
+        window.scrollTo({ top: c.getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' });
+      });
+    });
+    return;
+  }
+  document.documentElement.classList.add('gl');
 
-      <div class="recs-grid">
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var mobile = innerWidth < 760;
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, mobile ? 1.25 : 1.5));
+  var camera = new THREE.PerspectiveCamera(68, 1, 0.05, 400);
 
-        <blockquote class="rec rec--featured fade-up">
-          <p>"I had the pleasure of working closely with Matt, and I can confidently say that he is one of the most exceptional product managers I've encountered. His ability to navigate the complexities of product development while maintaining a clear focus on the user and business goals is truly remarkable. Beyond his technical prowess, Matt's leadership style fosters trust and collaboration."</p>
-          <cite>
-            <strong>Adrian Cireasa</strong>
-            <span>Project Manager, Nickelodeon</span>
-          </cite>
-        </blockquote>
+  function V(x, y, z) { return new THREE.Vector3(x, y, z); }
+  function ss(a, b, x) { x = Math.min(1, Math.max(0, (x - a) / (b - a))); return x * x * (3 - 2 * x); }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function easeOut(x) { return 1 - Math.pow(1 - x, 3); }
+  function rnd(a, b) { return a + Math.random() * (b - a); }
 
-        <blockquote class="rec fade-up">
-          <p>"At Tubi, he demonstrated his ability to drive significant results with key partners like Amazon and Apple. He never shied away from a challenge, happily stepping up to lead when there was a vacuum — like shepherding the Vision Pro launch across the finish line."</p>
-          <cite>
-            <strong>David Golan</strong>
-            <span>Senior Product Manager, Tubi</span>
-          </cite>
-        </blockquote>
+  // =====================================================================
+  // ARENA
+  // =====================================================================
+  var arena = new THREE.Scene();
+  arena.background = new THREE.Color(0x02040a);
+  arena.fog = new THREE.Fog(0x02040a, 30, 85);
+  arena.add(new THREE.HemisphereLight(0x8fa8ff, 0x0a0c14, 0.35));
+  var key = new THREE.DirectionalLight(0xfff1dc, 1.6); key.position.set(-6, 22, 10); arena.add(key);
+  var rimL = new THREE.DirectionalLight(0x5b8cff, 0.9); rimL.position.set(18, 6, -12); arena.add(rimL);
+  var warmL = new THREE.PointLight(0xff8f3d, 1.2, 30); warmL.position.set(12, 6, 6); arena.add(warmL);
+  // reflections for metal, glass and the ball: a small light-box scene baked into an environment map
+  (function () {
+    var env = new THREE.Scene(); env.background = new THREE.Color(0x020308);
+    var white = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    for (var k = 0; k < 10; k++) { var b = new THREE.Mesh(new THREE.BoxGeometry(3, 0.4, 3), white); b.position.set((k % 5 - 2) * 6, 12, (k < 5 ? -5 : 5)); env.add(b); }
+    var o = new THREE.Mesh(new THREE.TorusGeometry(14, 0.35, 8, 64), new THREE.MeshBasicMaterial({ color: 0xff8f3d })); o.rotation.x = Math.PI / 2; o.position.y = 3; env.add(o);
+    var bl = new THREE.Mesh(new THREE.TorusGeometry(14, 0.3, 8, 64), new THREE.MeshBasicMaterial({ color: 0x2b6cff })); bl.rotation.x = Math.PI / 2; bl.position.y = 1.5; env.add(bl);
+    var pm = new THREE.PMREMGenerator(renderer);
+    arena.environment = pm.fromScene(env, 0.04).texture;
+    pm.dispose();
+  })();
 
-        <blockquote class="rec fade-up">
-          <p>"His ability to clearly articulate the product vision was instrumental in aligning our team. Whether engaging with stakeholders, negotiating priorities, or updating leadership, he did so with confidence and clarity."</p>
-          <cite>
-            <strong>Ben Clissen</strong>
-            <span>Senior Technical PM, Paramount Global</span>
-          </cite>
-        </blockquote>
+  var HX = 14.325, HZ = 7.62, BASKET = 12.75, RIM_Y = 3.05;
 
-        <blockquote class="rec fade-up">
-          <p>"As a designer, I relied on information that would help develop better designs and Matthew was a pivotal point of contact for all creative needs. His communication and collaborative efforts really refined our design process."</p>
-          <cite>
-            <strong>Rebecca Laval</strong>
-            <span>Product Design, Tubi</span>
-          </cite>
-        </blockquote>
+  // court floor
+  (function () {
+    var W = 2048, H = 1206, M = 32.6, ppm = W / M;
+    var cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    var g = cv.getContext('2d');
+    function X(x) { return W / 2 + x * ppm; } function Z(z) { return H / 2 + z * ppm; }
+    g.fillStyle = '#1d3a86'; g.fillRect(0, 0, W, H);
+    // planks
+    var rowH = 0.11 * ppm;
+    g.save(); g.beginPath(); g.rect(X(-HX), Z(-HZ), 2 * HX * ppm, 2 * HZ * ppm); g.clip();
+    for (var y = Z(-HZ); y < Z(HZ); y += rowH) {
+      var x = X(-HX) - Math.random() * 3 * ppm;
+      while (x < X(HX)) {
+        var len = (1.5 + Math.random() * 3) * ppm;
+        var l = 36 + Math.random() * 8, s = 42 + Math.random() * 10;
+        g.fillStyle = 'hsl(' + (28 + Math.random() * 6) + ',' + s + '%,' + l + '%)';
+        g.fillRect(x, y, len, rowH);
+        g.fillStyle = 'rgba(40,20,5,0.35)'; g.fillRect(x + len - 1, y, 1.5, rowH);
+        x += len;
+      }
+      g.fillStyle = 'rgba(40,20,5,0.18)'; g.fillRect(X(-HX), y, X(HX) - X(-HX), 1);
+    }
+    g.restore();
+    g.save(); g.beginPath(); g.rect(0, 0, W, H); g.rect(X(-HX), Z(-HZ), X(HX) - X(-HX), Z(HZ) - Z(-HZ)); g.restore();
+    // paint
+    g.fillStyle = 'rgba(29,58,134,0.95)';
+    g.fillRect(X(HX - 5.8), Z(-2.45), 5.8 * ppm, 4.9 * ppm);
+    g.fillRect(X(-HX), Z(-2.45), 5.8 * ppm, 4.9 * ppm);
+    g.beginPath(); g.arc(X(0), Z(0), 1.8 * ppm, 0, Math.PI * 2); g.fill();
+    // lines
+    g.strokeStyle = 'rgba(255,255,255,0.92)'; g.lineWidth = 0.06 * ppm;
+    g.strokeRect(X(-HX), Z(-HZ), 2 * HX * ppm, 2 * HZ * ppm);
+    g.beginPath(); g.moveTo(X(0), Z(-HZ)); g.lineTo(X(0), Z(HZ)); g.stroke();
+    g.beginPath(); g.arc(X(0), Z(0), 1.8 * ppm, 0, Math.PI * 2); g.stroke();
+    g.beginPath(); g.arc(X(0), Z(0), 0.6 * ppm, 0, Math.PI * 2); g.stroke();
+    [-1, 1].forEach(function (s) {
+      g.strokeRect(s > 0 ? X(HX - 5.8) : X(-HX), Z(-2.45), 5.8 * ppm, 4.9 * ppm);
+      g.beginPath(); g.arc(X(s * (HX - 5.8)), Z(0), 1.8 * ppm, 0, Math.PI * 2); g.stroke();
+      var th = Math.asin(6.6 / 6.75), cx = X(s * BASKET);
+      g.beginPath();
+      if (s > 0) g.arc(cx, Z(0), 6.75 * ppm, Math.PI - th, Math.PI + th);
+      else g.arc(cx, Z(0), 6.75 * ppm, -th, th);
+      g.stroke();
+      var xe = s * (BASKET - Math.sqrt(6.75 * 6.75 - 6.6 * 6.6));
+      [-6.6, 6.6].forEach(function (zz) { g.beginPath(); g.moveTo(X(s * HX), Z(zz)); g.lineTo(X(xe), Z(zz)); g.stroke(); });
+    });
+    // center mark
+    g.fillStyle = 'rgba(255,255,255,0.95)';
+    g.font = '800 ' + Math.round(0.42 * ppm) + 'px "Bricolage Grotesque", "Arial Black", sans-serif';
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText('MATTAGER', X(0), Z(0));
+    // lighting
+    var rg = g.createRadialGradient(X(0), Z(0), 2 * ppm, X(0), Z(0), 18 * ppm);
+    rg.addColorStop(0, 'rgba(255,244,225,0.10)'); rg.addColorStop(0.6, 'rgba(0,0,0,0.05)'); rg.addColorStop(1, 'rgba(0,0,0,0.5)');
+    g.fillStyle = rg; g.fillRect(0, 0, W, H);
+    var tex = new THREE.CanvasTexture(cv);
+    tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    var floor = new THREE.Mesh(new THREE.PlaneGeometry(M, M * H / W), new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.8, depthWrite: false }));
+    floor.rotation.x = -Math.PI / 2; floor.position.y = 0.004; floor.renderOrder = 2;
+    arena.add(floor);
+    var around = new THREE.Mesh(new THREE.PlaneGeometry(80, 60), new THREE.MeshBasicMaterial({ color: 0x03050b, transparent: true, opacity: 0.78, depthWrite: false }));
+    around.rotation.x = -Math.PI / 2; around.position.y = 0.002; around.renderOrder = 1;
+    arena.add(around);
+    if (THREE.Reflector) {
+      var q = mobile ? 0.5 : 0.75;
+      var mirror = new THREE.Reflector(new THREE.PlaneGeometry(80, 60), {
+        clipBias: 0.003, color: 0xa4a9b4,
+        textureWidth: Math.round(innerWidth * Math.min(devicePixelRatio || 1, 1.5) * q),
+        textureHeight: Math.round(innerHeight * Math.min(devicePixelRatio || 1, 1.5) * q)
+      });
+      mirror.rotation.x = -Math.PI / 2;
+      arena.add(mirror);
+    }
 
-        <blockquote class="rec fade-up">
-          <p>"Matthew led experiments to improve conversion metrics on our various app stores, leading ideation and pressure-testing creative theories. As Tubi expands globally, we have Matthew to thank for laying the foundation of our App Store efforts."</p>
-          <cite>
-            <strong>Dan Bowman</strong>
-            <span>Product Growth, Tubi</span>
-          </cite>
-        </blockquote>
+  })();
 
-        <blockquote class="rec fade-up">
-          <p>"Matt created very clear and well-documented tickets. He was ready to jump on a call any time we had misunderstandings and had a very positive attitude. He will bring a lot of value through his vast experience, knowledge, kindness, and patience."</p>
-          <cite>
-            <strong>Diana Daia</strong>
-            <span>iOS Software Engineer, Cognizant / Nickelodeon</span>
-          </cite>
-        </blockquote>
+  // rounded-rectangle ring helper
+  function rrPts(d, step) {
+    var sx = HX, sz = HZ, r = d, hx = HX + d, hz = HZ + d, pts = [];
+    function line(x0, z0, x1, z1) { var len = Math.hypot(x1 - x0, z1 - z0), n = Math.max(1, Math.floor(len / step)); for (var i = 0; i < n; i++) { var t = i / n; pts.push([x0 + (x1 - x0) * t, z0 + (z1 - z0) * t]); } }
+    function arc(cx, cz, a0, a1) { var len = Math.abs(a1 - a0) * r, n = Math.max(1, Math.floor(len / step)); for (var i = 0; i < n; i++) { var a = a0 + (a1 - a0) * i / n; pts.push([cx + Math.cos(a) * r, cz + Math.sin(a) * r]); } }
+    line(-sx, hz, sx, hz); arc(sx, sz, Math.PI / 2, 0); line(hx, sz, hx, -sz); arc(sx, -sz, 0, -Math.PI / 2);
+    line(sx, -hz, -sx, -hz); arc(-sx, -sz, -Math.PI / 2, -Math.PI); line(-hx, -sz, -hx, sz); arc(-sx, sz, Math.PI, Math.PI / 2);
+    return pts;
+  }
 
-      </div>
-    </div>
-  </section>
+  // crowd: tens of thousands of points of light in a dark seating bowl
+  var crowdMat;
+  (function () {
+    var step = mobile ? 0.5 : 0.34, pos = [], col = [], seed = [];
+    var dim = [[0.42, 0.33, 0.28], [0.22, 0.27, 0.42], [0.3, 0.3, 0.34], [0.5, 0.26, 0.16], [0.16, 0.3, 0.6]];
+    function addRow(d, y, aisleEvery) {
+      var pts = rrPts(d, step), run = 0;
+      pts.forEach(function (p, i) {
+        run += step;
+        if (run % aisleEvery < 1.1) { // aisle: a few warm step lights, no fans
+          if (Math.random() < 0.25) { pos.push(p[0], y - 0.15, p[1]); col.push(1.0, 0.72, 0.35); seed.push(-1); }
+          return;
+        }
+        var c = Math.random() < 0.05 ? [1.4, 1.4, 1.5] : dim[(Math.random() * dim.length) | 0];
+        var m = rnd(0.55, 1.1);
+        pos.push(p[0] + rnd(-0.1, 0.1), y + rnd(0, 0.18), p[1] + rnd(-0.1, 0.1));
+        col.push(c[0] * m, c[1] * m, c[2] * m); seed.push(Math.random());
+      });
+    }
+    for (var r = 0; r < 20; r++) addRow(2.6 + r * 0.55, 0.45 + r * 0.3, 13);
+    for (var u = 0; u < 24; u++) addRow(13.6 + u * 0.6, 7.85 + u * 0.4, 17);
+    var g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('aCol', new THREE.Float32BufferAttribute(col, 3));
+    g.setAttribute('aSeed', new THREE.Float32BufferAttribute(seed, 1));
+    crowdMat = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      uniforms: { uTime: { value: 0 }, uPx: { value: renderer.getPixelRatio() } },
+      vertexShader: [
+        'attribute vec3 aCol; attribute float aSeed; uniform float uTime; uniform float uPx; varying vec3 vCol; varying float vFade;',
+        'void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0);',
+        '  float flash = aSeed < 0.0 ? 0.0 : smoothstep(0.985, 1.0, sin(uTime * (0.6 + aSeed * 1.7) + aSeed * 90.0));',
+        '  vCol = aCol * (1.0 + flash * 5.0);',
+        '  vFade = 1.0 - smoothstep(30.0, 80.0, -mv.z);',
+        '  gl_PointSize = clamp(uPx * (aSeed < 0.0 ? 2.2 : 1.6 + flash * 2.5) * 22.0 / -mv.z, 1.0, 9.0);',
+        '  gl_Position = projectionMatrix * mv; }'
+      ].join('\n'),
+      fragmentShader: [
+        'varying vec3 vCol; varying float vFade;',
+        'void main(){ float d = length(gl_PointCoord - 0.5); float a = smoothstep(0.5, 0.05, d);',
+        '  gl_FragColor = vec4(vCol * a * vFade, 1.0); }'
+      ].join('\n')
+    });
+    arena.add(new THREE.Points(g, crowdMat));
+    // dark bowl surfaces behind the lights, so far seats hide what is behind them
+    function band(d0, y0, d1, y1, color) {
+      var a = rrPts(d0, 1.0), b = rrPts(d1, 1.0), n = Math.min(a.length, b.length), v = [], idx = [];
+      for (var i = 0; i < n; i++) {
+        var pa = a[Math.floor(i * a.length / n)], pb = b[Math.floor(i * b.length / n)];
+        v.push(pa[0], y0, pa[1], pb[0], y1, pb[1]);
+      }
+      for (var k = 0; k < n; k++) { var k2 = (k + 1) % n; idx.push(k * 2, k * 2 + 1, k2 * 2, k2 * 2, k * 2 + 1, k2 * 2 + 1); }
+      var gg = new THREE.BufferGeometry(); gg.setAttribute('position', new THREE.Float32BufferAttribute(v, 3)); gg.setIndex(idx);
+      arena.add(new THREE.Mesh(gg, new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide })));
+    }
+    band(2.3, 0.0, 13.4, 6.2, 0x05070e);
+    band(13.4, 6.2, 13.4, 7.4, 0x0a0e1a);
+    band(13.4, 7.4, 28.2, 17.4, 0x05070e);
+    band(28.2, 17.4, 28.2, 22, 0x03040a);
+    band(1.4, 0.0, 1.4, 0.9, 0x070b16);
+  })();
 
-  <!-- ============================================================
-       CONTACT
-       ============================================================ -->
-  <section class="section contact" id="contact">
-    <div class="contact__glow"></div>
-    <div class="section__inner">
-      <div class="contact__inner fade-up">
-        <span class="section__eyebrow">Contact</span>
-        <h2 class="section__title">Let's talk<br><em>corners.</em></h2>
-        <p class="contact__desc">I'm exploring Director of Product and Senior PM roles, with a focus on streaming, CTV, and platform products. If you're building something interesting — or know someone who is — I'd love to hear about it.</p>
-        <div class="contact__links">
-          <a href="mailto:Matt@ProductMattager.com" class="contact__link">Matt@ProductMattager.com</a>
-          <a href="https://linkedin.com/in/englermatthew" class="contact__link" target="_blank" rel="noopener">LinkedIn</a>
-        </div>
-      </div>
-    </div>
-  </section>
+  // LED ribbons
+  function ribbon(d, y, color, radius) {
+    var pts = rrPts(d, 1.2).map(function (p) { return V(p[0], y, p[1]); });
+    var curve = new THREE.CatmullRomCurve3(pts, true);
+    arena.add(new THREE.Mesh(new THREE.TubeGeometry(curve, pts.length * 2, radius, 6, true), new THREE.MeshBasicMaterial({ color: color })));
+  }
+  ribbon(1.35, 0.86, 0x2b6cff, 0.05);
+  ribbon(13.3, 7.05, 0xff8f3d, 0.13);
+  ribbon(13.3, 6.55, 0x2b6cff, 0.11);
+  ribbon(28.1, 17.6, 0xff8f3d, 0.08);
 
-  <!-- ============================================================
-       FOOTER
-       ============================================================ -->
-  <footer class="footer">
-    <div class="footer__inner">
-      <span class="footer__name">Matt Engler</span>
-      <span class="footer__copy">© 2026. Product Mattager.</span>
-      <div class="footer__links">
-        <a href="https://linkedin.com/in/englermatthew" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="mailto:Matt@ProductMattager.com">Email</a>
-      </div>
-    </div>
-  </footer>
+  // hoops: padded stanchion, glass board, metal rim, net
+  (function () {
+    var navy = new THREE.MeshStandardMaterial({ color: 0x14204a, roughness: 0.55, metalness: 0.1 });
+    var steel = new THREE.MeshStandardMaterial({ color: 0x9aa3b5, roughness: 0.3, metalness: 0.9 });
+    var glassM = new THREE.MeshStandardMaterial({ color: 0xdfe8ff, roughness: 0.04, metalness: 0.0, transparent: true, opacity: 0.22, envMapIntensity: 2.2, depthWrite: false, side: THREE.DoubleSide });
+    var white = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 0.35, roughness: 0.4 });
+    var orange = new THREE.MeshStandardMaterial({ color: 0xff5a00, emissive: 0xff3300, emissiveIntensity: 0.35, roughness: 0.35, metalness: 0.4 });
+    function box(w, h, d, m, x, y, z, grp) { var b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, z); grp.add(b); return b; }
+    [-1, 1].forEach(function (s) {
+      var grp = new THREE.Group();
+      box(1.9, 1.1, 1.5, navy, s * 16.4, 0.55, 0, grp);
+      box(1.7, 0.08, 1.3, steel, s * 16.4, 1.14, 0, grp);
+      var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.2, 2.6, 24), navy); pole.position.set(s * 16.0, 2.4, 0); grp.add(pole);
+      var arm = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 2.9, 20), steel);
+      arm.rotation.z = Math.PI / 2 + s * 0.12; arm.position.set(s * 14.6, 3.6, 0); grp.add(arm);
+      var glass = new THREE.Mesh(new THREE.BoxGeometry(0.03, 1.07, 1.83), glassM); glass.position.set(s * 13.1, 3.45, 0); glass.renderOrder = 3; grp.add(glass);
+      [[0, 0.52, 1.83, 0.05], [0, -0.52, 1.83, 0.05], [0.9, 0, 0.05, 1.07], [-0.9, 0, 0.05, 1.07]].forEach(function (f) {
+        box(0.04, f[3], f[2], white, s * 13.09, 3.45 + f[1], f[0], grp);
+      });
+      [[0, 0.21, 0.59, 0.04], [0, -0.21, 0.59, 0.04], [0.29, 0, 0.04, 0.45], [-0.29, 0, 0.04, 0.45]].forEach(function (f) {
+        box(0.04, f[3], f[2], orange, s * 13.07, RIM_Y + 0.33 + f[1], f[0], grp);
+      });
+      box(0.12, 0.09, 1.83, navy, s * 13.12, 2.88, 0, grp);
+      var rim = new THREE.Mesh(new THREE.TorusGeometry(0.23, 0.017, 14, 64), orange);
+      rim.rotation.x = Math.PI / 2; rim.position.set(s * BASKET, RIM_Y, 0); grp.add(rim);
+      box(0.16, 0.03, 0.12, orange, s * (BASKET + 0.28), RIM_Y, 0, grp);
+      var pos = [], N = 16;
+      for (var i = 0; i < N; i++) {
+        var a0 = i / N * Math.PI * 2, a1 = (i + 1) / N * Math.PI * 2;
+        for (var k = 0; k < 5; k++) {
+          var y0 = -k * 0.09, y1 = -(k + 1) * 0.09, r0 = 0.225 - k * 0.022, r1 = 0.225 - (k + 1) * 0.022;
+          pos.push(Math.cos(a0) * r0, y0, Math.sin(a0) * r0, Math.cos(a1) * r1, y1, Math.sin(a1) * r1);
+          pos.push(Math.cos(a1) * r0, y0, Math.sin(a1) * r0, Math.cos(a0) * r1, y1, Math.sin(a0) * r1);
+        }
+      }
+      var ng = new THREE.BufferGeometry(); ng.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+      var net = new THREE.LineSegments(ng, new THREE.LineBasicMaterial({ color: 0xf2f4ff, transparent: true, opacity: 0.9 }));
+      net.position.set(s * BASKET, RIM_Y - 0.01, 0); grp.add(net);
+      arena.add(grp);
+    });
+  })();
+  var RIM = V(BASKET, RIM_Y, 0);
 
-  <script src="script.js"></script>
+  // jumbotron
+  var JY = 13.5, JW = 7.6, JH = 4.4, SCREEN_Z = JW / 2 + 0.02;
+  var jumboCv = document.createElement('canvas'); jumboCv.width = 2048; jumboCv.height = 1152;
+  var jumboTex = new THREE.CanvasTexture(jumboCv);
+  jumboTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  function drawJumbo() {
+    var g = jumboCv.getContext('2d'), W = 1280, H = 720;
+    g.setTransform(1.6, 0, 0, 1.6, 0, 0);
+    var bg = g.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#071230'); bg.addColorStop(1, '#0c1d4a');
+    g.fillStyle = bg; g.fillRect(0, 0, W, H);
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillStyle = '#ffb03b'; g.font = '500 30px "JetBrains Mono", Menlo, monospace';
+    g.fillText('M A T T   E N G L E R   ·   P R O D U C T   M A T T A G E R', W / 2, 92);
+    g.fillStyle = '#ffffff'; g.font = '800 92px "Bricolage Grotesque", "Arial Black", sans-serif';
+    g.fillText('I see around corners.', W / 2, 250);
+    g.fillStyle = '#ffb03b';
+    g.fillText('Then I bring everyone', W / 2, 362);
+    g.fillText('else along.', W / 2, 474);
+    g.fillStyle = 'rgba(255,255,255,0.75)'; g.font = '500 28px "JetBrains Mono", Menlo, monospace';
+    g.fillText('SENIOR TECHNICAL PM  ·  NBA  ·  TUBI  ·  NICKELODEON', W / 2, 610);
+    g.fillStyle = 'rgba(0,0,0,0.16)';
+    for (var y = 0; y < H; y += 4) g.fillRect(0, y, W, 0.6);
+    for (var x = 0; x < W; x += 4) g.fillRect(x, 0, 0.6, H);
+    jumboTex.needsUpdate = true;
+  }
+  drawJumbo();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawJumbo);
+  (function () {
+    var grp = new THREE.Group(); grp.position.y = JY;
+    grp.add(new THREE.Mesh(new THREE.BoxGeometry(JW, JH, JW), new THREE.MeshStandardMaterial({ color: 0x0b0e16, roughness: 0.5 })));
+    // dimmed just under the bloom threshold so the text stays crisp instead of glowing
+    var scr = new THREE.MeshBasicMaterial({ map: jumboTex, color: 0x969696 });
+    for (var i = 0; i < 4; i++) {
+      var p = new THREE.Mesh(new THREE.PlaneGeometry(JW - 0.3, JH - 0.4), scr);
+      var a = i * Math.PI / 2;
+      p.position.set(Math.sin(a) * SCREEN_Z, 0, Math.cos(a) * SCREEN_Z);
+      p.rotation.y = a; grp.add(p);
+    }
+    var led = new THREE.MeshBasicMaterial({ color: 0xff8f3d });
+    [JH / 2 + 0.12, -JH / 2 - 0.12].forEach(function (y) { var b = new THREE.Mesh(new THREE.BoxGeometry(JW + 0.2, 0.16, JW + 0.2), led); b.position.y = y; grp.add(b); });
+    var lower = new THREE.Mesh(new THREE.BoxGeometry(5.4, 1.1, 5.4), new THREE.MeshStandardMaterial({ color: 0x0b0e16 })); lower.position.y = -JH / 2 - 1.0; grp.add(lower);
+    var lowLed = new THREE.Mesh(new THREE.BoxGeometry(5.5, 0.14, 5.5), new THREE.MeshBasicMaterial({ color: 0x2b6cff })); lowLed.position.y = -JH / 2 - 1.62; grp.add(lowLed);
+    var cable = new THREE.Mesh(new THREE.BoxGeometry(0.15, 10, 0.15), new THREE.MeshBasicMaterial({ color: 0x111111 })); cable.position.y = JH / 2 + 5; grp.add(cable);
+    arena.add(grp);
+  })();
+
+  // haze
+  (function () {
+    var n = mobile ? 400 : 900, pos = new Float32Array(n * 3);
+    for (var i = 0; i < n; i++) { pos[i * 3] = rnd(-30, 30); pos[i * 3 + 1] = rnd(0.5, 24); pos[i * 3 + 2] = rnd(-22, 22); }
+    var g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    arena.add(new THREE.Points(g, new THREE.PointsMaterial({ color: 0xffe9c4, size: 0.06, transparent: true, opacity: 0.5, depthWrite: false })));
+  })();
+
+  // ball: pebbled leather with clean black channels
+  var ball = (function () {
+    var W = 1024, H = 512;
+    var cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    var g = cv.getContext('2d');
+    var gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#d8641f'); gr.addColorStop(0.5, '#c9561a'); gr.addColorStop(1, '#b84d16');
+    g.fillStyle = gr; g.fillRect(0, 0, W, H);
+    for (var i = 0; i < 9000; i++) { g.fillStyle = 'rgba(80,25,5,' + rnd(0.05, 0.14) + ')'; g.beginPath(); g.arc(Math.random() * W, Math.random() * H, rnd(0.8, 1.8), 0, 7); g.fill(); }
+    var bc = document.createElement('canvas'); bc.width = W; bc.height = H;
+    var b = bc.getContext('2d'); b.fillStyle = '#888'; b.fillRect(0, 0, W, H);
+    for (var j = 0; j < 26000; j++) { b.fillStyle = 'rgba(255,255,255,' + rnd(0.3, 0.7) + ')'; b.beginPath(); b.arc(Math.random() * W, Math.random() * H, rnd(1, 2.2), 0, 7); b.fill(); }
+    // Real 8-panel layout, worked out on the sphere itself: two great circles at right angles
+    // (the equator and one meridian ring), plus two curved seams that are circles in planes
+    // parallel to that meridian ring. Each curved seam crosses the equator and never touches the ring.
+    function applySeams(ctx, rgb, half, soft) {
+      var img = ctx.getImageData(0, 0, W, H), d = img.data, C = 0.64, K = Math.sqrt(1 - C * C);
+      for (var py = 0; py < H; py++) {
+        var th = (py + 0.5) / H * Math.PI, st = Math.sin(th), y = Math.cos(th);
+        for (var px = 0; px < W; px++) {
+          var ph = (px + 0.5) / W * Math.PI * 2, x = -Math.cos(ph) * st;
+          var m = Math.min(Math.abs(y), Math.abs(x), Math.abs(Math.abs(x) - C) / K);
+          if (m > half + soft) continue;
+          var a = m < half ? 1 : 1 - (m - half) / soft, o = (py * W + px) * 4;
+          d[o] += (rgb[0] - d[o]) * a; d[o + 1] += (rgb[1] - d[o + 1]) * a; d[o + 2] += (rgb[2] - d[o + 2]) * a;
+        }
+      }
+      ctx.putImageData(img, 0, 0);
+    }
+    applySeams(g, [20, 10, 5], 0.017, 0.007);
+    applySeams(b, [10, 10, 10], 0.022, 0.009);
+    var mat = new THREE.MeshPhysicalMaterial({
+      map: new THREE.CanvasTexture(cv), bumpMap: new THREE.CanvasTexture(bc), bumpScale: 0.012,
+      roughness: 0.62, clearcoat: 0.25, clearcoatRoughness: 0.5, envMapIntensity: 0.9
+    });
+    mat.map.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    var m = new THREE.Mesh(new THREE.SphereGeometry(0.2, 64, 40), mat);
+    arena.add(m);
+    return m;
+  })();
+  var B0 = V(2.4, 1.9, 5.4);
+  function ballAt(s, out) {
+    out.copy(B0).lerp(RIM, s);
+    out.y += 4 * 5.2 * s * (1 - s);
+    return out;
+  }
+
+  // =====================================================================
+  // TUNNEL
+  // =====================================================================
+  var tunnel = new THREE.Scene();
+  var pts = [];
+  for (var i = 0; i <= 60; i++) { var tt = i / 60, aa = tt * Math.PI * 7; pts.push(V(Math.sin(aa) * 6 * (0.4 + tt * 0.8), Math.cos(aa * 0.7) * 4, -tt * 380)); }
+  var curve = new THREE.CatmullRomCurve3(pts);
+  var Z1 = [0.03, 0.12], Z2 = [0.84, 0.93];
+  var PAL = {
+    nba: { bg: new THREE.Color(0x050d24), rib: new THREE.Color(0x2b6cff), ring: new THREE.Color(0xff8f3d) },
+    tubi: { bg: new THREE.Color(0x20004a), rib: new THREE.Color(0x8c01e5), ring: new THREE.Color(0xffff13) },
+    nick: { bg: new THREE.Color(0x1f0c00), rib: new THREE.Color(0x8cff4a), ring: new THREE.Color(0xff7a00) }
+  };
+  var _c1 = new THREE.Color();
+  function palAt(u, key, out) {
+    _c1.copy(PAL.nba[key]).lerp(PAL.tubi[key], ss(Z1[0], Z1[1], u));
+    return out.copy(_c1).lerp(PAL.nick[key], ss(Z2[0], Z2[1], u));
+  }
+  var tubeMat = new THREE.ShaderMaterial({
+    side: THREE.BackSide,
+    uniforms: {
+      uTime: { value: 0 }, uFog: { value: new THREE.Color() }, uZ: { value: new THREE.Vector4(Z1[0], Z1[1], Z2[0], Z2[1]) },
+      nBg: { value: PAL.nba.bg }, nRib: { value: PAL.nba.rib }, nRing: { value: PAL.nba.ring },
+      tBg: { value: PAL.tubi.bg }, tRib: { value: PAL.tubi.rib }, tRing: { value: PAL.tubi.ring },
+      kBg: { value: PAL.nick.bg }, kRib: { value: PAL.nick.rib }, kRing: { value: PAL.nick.ring }
+    },
+    vertexShader: 'varying vec2 vUv; varying float vDepth; void main(){ vUv = uv; vec4 mv = modelViewMatrix * vec4(position,1.0); vDepth = -mv.z; gl_Position = projectionMatrix * mv; }',
+    fragmentShader: [
+      'uniform float uTime; uniform vec3 uFog; uniform vec4 uZ;',
+      'uniform vec3 nBg; uniform vec3 nRib; uniform vec3 nRing; uniform vec3 tBg; uniform vec3 tRib; uniform vec3 tRing; uniform vec3 kBg; uniform vec3 kRib; uniform vec3 kRing;',
+      'varying vec2 vUv; varying float vDepth;',
+      'float line(float x, float w){ float f = abs(fract(x)-0.5); return smoothstep(0.5-w, 0.5, f); }',
+      'void main(){',
+      '  float u = vUv.x; float a = smoothstep(uZ.x, uZ.y, u), b = smoothstep(uZ.z, uZ.w, u);',
+      '  vec3 bg = mix(mix(nBg, tBg, a), kBg, b); vec3 rib = mix(mix(nRib, tRib, a), kRib, b); vec3 ring = mix(mix(nRing, tRing, a), kRing, b);',
+      '  float rings = line(u * 260.0 + uTime * 1.6, 0.06);',
+      '  float ribs = line(vUv.y * 20.0 + u * 40.0 + uTime * 0.25, 0.035);',
+      '  float pulse = 0.5 + 0.5 * sin(u * 90.0 - uTime * 2.0);',
+      '  vec3 col = bg * 1.8; col = mix(col, rib, ribs * 0.85); col = mix(col, ring * (1.0 + 0.6 * pulse), rings * (0.45 + 0.55 * pulse));',
+      '  float endGlow = smoothstep(0.94, 1.0, u); col = mix(col, kRib, endGlow * 0.9);',
+      '  float fog = smoothstep(4.0, 55.0, vDepth); col = mix(col, uFog, fog * (1.0 - endGlow * 0.6));',
+      '  gl_FragColor = vec4(col, 1.0);',
+      '}'
+    ].join('\n')
+  });
+  tunnel.add(new THREE.Mesh(new THREE.TubeGeometry(curve, mobile ? 700 : 1000, 3.2, 48, false), tubeMat));
+  (function () {
+    var n = mobile ? 600 : 1400, pos = new Float32Array(n * 3), tmp = V(0, 0, 0);
+    for (var k = 0; k < n; k++) { curve.getPointAt(Math.random(), tmp); var r = Math.random() * 2.6, th = Math.random() * Math.PI * 2; pos[k * 3] = tmp.x + Math.cos(th) * r; pos[k * 3 + 1] = tmp.y + Math.sin(th) * r; pos[k * 3 + 2] = tmp.z + rnd(-1, 1); }
+    var g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    tunnel.add(new THREE.Points(g, new THREE.PointsMaterial({ color: 0xffffff, size: 0.05, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending, depthWrite: false })));
+  })();
+  var STREAKS = mobile ? 220 : 440;
+  var streakMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false });
+  var streaks = new THREE.InstancedMesh(new THREE.BoxGeometry(0.035, 0.035, 1), streakMat, STREAKS);
+  var sBase = [], dummy = new THREE.Object3D(), sCol = new THREE.Color(), UP = V(0, 1, 0);
+  for (var s = 0; s < STREAKS; s++) {
+    var st = Math.random(), sp = curve.getPointAt(st), stan = curve.getTangentAt(st);
+    var ang = Math.random() * Math.PI * 2, rad = 2.3 + Math.random() * 0.7;
+    var n1 = V(0, 0, 0).crossVectors(stan, UP).normalize(), n2 = V(0, 0, 0).crossVectors(stan, n1).normalize();
+    sp.addScaledVector(n1, Math.cos(ang) * rad).addScaledVector(n2, Math.sin(ang) * rad);
+    sBase.push({ p: sp, look: sp.clone().add(stan), len: 0.6 + Math.random() * 1.4 });
+    streaks.setColorAt(s, palAt(st, Math.random() < 0.6 ? 'ring' : 'rib', sCol));
+  }
+  tunnel.add(streaks);
+
+  // slime portal: a glowing green disc that fills the end of the tunnel
+  var PORTAL_T = 0.999, PORTAL_R = 3.15, TUN_L = curve.getLength();
+  var portalMat = new THREE.ShaderMaterial({
+    side: THREE.DoubleSide, transparent: true,
+    uniforms: { uTime: { value: 0 } },
+    vertexShader: 'varying vec2 vP; void main(){ vP = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+    fragmentShader: [
+      'uniform float uTime; varying vec2 vP;',
+      'void main(){ float r = length(vP) / ' + PORTAL_R.toFixed(2) + '; float a = atan(vP.y, vP.x);',
+      '  float edge = 0.9 + 0.05 * sin(a * 6.0 + uTime * 2.0) + 0.03 * sin(a * 11.0 - uTime * 3.0);',
+      '  if (r > edge + 0.06) discard;',
+      '  vec3 deep = vec3(0.25, 0.75, 0.04); vec3 lit = vec3(0.7, 1.0, 0.35);',
+      '  float swirl = 0.5 + 0.5 * sin(r * 14.0 - uTime * 3.0 + a * 2.0);',
+      '  vec3 c = mix(lit * 1.9, deep * 1.2, smoothstep(0.0, edge, r)) + swirl * 0.15;',
+      '  vec2 hl = vP / ' + PORTAL_R.toFixed(2) + ' - vec2(-0.35, 0.35); c += smoothstep(0.22, 0.0, length(hl * vec2(1.0, 1.8))) * 0.6;',
+      '  float alpha = 1.0 - smoothstep(edge, edge + 0.06, r);',
+      '  gl_FragColor = vec4(c, alpha); }'
+    ].join('\n')
+  });
+  var portal = new THREE.Mesh(new THREE.CircleGeometry(PORTAL_R, 96), portalMat);
+  curve.getPointAt(PORTAL_T, portal.position);
+  portal.lookAt(portal.position.clone().sub(curve.getTangentAt(PORTAL_T)));
+  tunnel.add(portal);
+  var _pv = V(0, 0, 0), _pe = V(0, 0, 0);
+  function portalRadiusPx() {
+    _pv.copy(portal.position).project(camera);
+    _pe.set(PORTAL_R * 0.9, 0, 0).applyMatrix4(portal.matrixWorld).project(camera);
+    var dx = (_pe.x - _pv.x) * innerWidth / 2, dy = (_pe.y - _pv.y) * innerHeight / 2;
+    return { r: Math.hypot(dx, dy), x: (_pv.x + 1) / 2 * innerWidth, y: (1 - _pv.y) / 2 * innerHeight };
+  }
+  function updateStreaks(vel) {
+    for (var s = 0; s < STREAKS; s++) {
+      var b = sBase[s];
+      dummy.position.copy(b.p); dummy.lookAt(b.look); dummy.scale.set(1, 1, b.len * (0.4 + vel * 9));
+      dummy.updateMatrix(); streaks.setMatrixAt(s, dummy.matrix);
+    }
+    streaks.instanceMatrix.needsUpdate = true;
+    streakMat.opacity = 0.35 + vel * 0.65;
+  }
+
+  // =====================================================================
+  // NICK WORLD
+  // =====================================================================
+  var nick = new THREE.Scene();
+  nick.fog = new THREE.Fog(0xffa24a, 35, 150);
+  nick.add(new THREE.HemisphereLight(0xfff3e0, 0xff6a00, 1.05));
+  var nSun = new THREE.DirectionalLight(0xffffff, 0.9); nSun.position.set(-8, 20, 10); nick.add(nSun);
+  nick.add(new THREE.Mesh(new THREE.SphereGeometry(180, 32, 16), new THREE.ShaderMaterial({
+    side: THREE.BackSide, fog: false,
+    vertexShader: 'varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+    fragmentShader: [
+      'varying vec3 vP;',
+      'void main(){ float h = normalize(vP).y;',
+      '  vec3 top = vec3(1.0, 0.36, 0.0); vec3 mid = vec3(1.0, 0.56, 0.12); vec3 hor = vec3(1.0, 0.82, 0.55);',
+      '  vec3 c = mix(hor, mid, smoothstep(0.0, 0.25, h)); c = mix(c, top, smoothstep(0.25, 0.8, h));',
+      '  gl_FragColor = vec4(c, 1.0); }'
+    ].join('\n')
+  })));
+  var slimeMat = new THREE.ShaderMaterial({
+    uniforms: { uTime: { value: 0 }, uFog: { value: new THREE.Color(0xffa24a) } },
+    vertexShader: [
+      'uniform float uTime; varying float vH; varying float vDepth; varying vec2 vXZ;',
+      'void main(){ vec3 p = position;',
+      '  float h = sin(p.x * 0.35 + uTime * 1.1) * 0.18 + sin(p.y * 0.28 - uTime * 1.4) * 0.16 + sin((p.x + p.y) * 0.9 + uTime * 2.0) * 0.05;',
+      '  p.z += h; vH = h; vXZ = p.xy;',
+      '  vec4 mv = modelViewMatrix * vec4(p,1.0); vDepth = -mv.z; gl_Position = projectionMatrix * mv; }'
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float uTime; uniform vec3 uFog; varying float vH; varying float vDepth; varying vec2 vXZ;',
+      'void main(){',
+      '  vec3 deep = vec3(0.22, 0.62, 0.02); vec3 lit = vec3(0.55, 1.0, 0.2);',
+      '  vec3 c = mix(deep, lit, smoothstep(-0.25, 0.3, vH));',
+      '  float spec = smoothstep(0.24, 0.36, vH + sin(vXZ.x * 2.0 + uTime) * 0.03); c += spec * 0.35;',
+      '  c = mix(c, uFog, smoothstep(30.0, 150.0, vDepth));',
+      '  gl_FragColor = vec4(c, 1.0); }'
+    ].join('\n')
+  });
+  var pool = new THREE.Mesh(new THREE.PlaneGeometry(320, 320, mobile ? 90 : 160, mobile ? 90 : 160), slimeMat);
+  pool.rotation.x = -Math.PI / 2; nick.add(pool);
+  var shapes = [];
+  (function () {
+    var geos = [new THREE.SphereGeometry(1, 32, 16), new THREE.TorusGeometry(0.9, 0.36, 18, 48), new THREE.ConeGeometry(0.9, 1.8, 32), new THREE.IcosahedronGeometry(1, 1), new THREE.CylinderGeometry(0.7, 0.7, 1.6, 32)];
+    var cols = [0xff6a00, 0xff8a1f, 0x8c3dff, 0xffffff, 0x8cff4a, 0xffd23f, 0x2bb6ff];
+    var n = mobile ? 14 : 22;
+    for (var i = 0; i < n; i++) {
+      var side = i % 2 ? 1 : -1;
+      var m = new THREE.Mesh(geos[i % geos.length], new THREE.MeshStandardMaterial({ color: cols[i % cols.length], roughness: 0.35, metalness: 0.05, flatShading: i % geos.length === 3 }));
+      var sc = rnd(0.6, 2.2);
+      m.scale.setScalar(sc);
+      if (i % geos.length === 0 && i % 3 === 0) m.scale.y = sc * 1.6;
+      m.position.set(side * rnd(4, 20), rnd(1.8, 13), rnd(-80, 6));
+      m.rotation.set(rnd(0, 6), rnd(0, 6), rnd(0, 6));
+      m.userData = { y: m.position.y, ph: rnd(0, 6.28), sp: rnd(0.3, 0.9), rs: rnd(-0.4, 0.4) };
+      nick.add(m); shapes.push(m);
+    }
+    // slime blobs in the pool
+    var blobMat = new THREE.MeshStandardMaterial({ color: 0x6fe01a, roughness: 0.15 });
+    for (var b = 0; b < 14; b++) {
+      var bl = new THREE.Mesh(geos[0], blobMat);
+      bl.scale.set(rnd(1, 3), rnd(0.4, 0.9), rnd(1, 3));
+      bl.position.set(rnd(-24, 24), 0, rnd(-70, -4));
+      nick.add(bl);
+    }
+  })();
+  // Nickelodeon app icons floating at different depths around the Nick world
+  var floaters = [];
+  (function () {
+    var list = [
+      ['icons/nick.png', -6, 7.5, -8, 2.2], ['icons/nickjr.png', 7.5, 9, -16, 2.6], ['icons/sbu.png', -9, 4, -20, 3],
+      ['icons/float/spongebob.png', 5.5, 3.2, -6, 1.6], ['icons/float/pawpatrol.png', -4.5, 10.5, -26, 2.4],
+      ['icons/float/blaze.png', 11, 5, -28, 3.2], ['icons/float/loudhouse.png', -12, 8.5, -34, 3.2],
+      ['icons/float/noggin.png', 4.5, 11.5, -40, 3], ['icons/float/shimmer.png', -7, 2.8, -44, 3],
+      ['icons/float/tmnt.png', 13, 9.5, -46, 3.6], ['icons/float/screensup.png', -3.5, 6.5, -58, 3.6],
+      ['icons/float/pawpatrol-sea.png', 9, 3.5, -62, 3.6]
+    ];
+    var loader = new THREE.TextureLoader(), geo = new THREE.PlaneGeometry(1, 1);
+    var shadowTex = (function () {
+      var c = document.createElement('canvas'); c.width = c.height = 128; var g = c.getContext('2d');
+      var r = g.createRadialGradient(64, 64, 10, 64, 64, 64); r.addColorStop(0, 'rgba(60,20,0,0.45)'); r.addColorStop(1, 'rgba(60,20,0,0)');
+      g.fillStyle = r; g.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c);
+    })();
+    list.forEach(function (d, n) {
+      var mat = new THREE.MeshBasicMaterial({ transparent: true, alphaTest: 0.02, side: THREE.DoubleSide, opacity: 0 });
+      loader.load(d[0], function (tx) { tx.anisotropy = renderer.capabilities.getMaxAnisotropy(); mat.map = tx; mat.opacity = 1; mat.needsUpdate = true; });
+      var grp = new THREE.Group();
+      var sh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false }));
+      sh.scale.setScalar(1.35); sh.position.set(0.06, -0.1, -0.05); grp.add(sh);
+      grp.add(new THREE.Mesh(geo, mat));
+      grp.scale.setScalar(d[4]);
+      grp.position.set(d[1], d[2], d[3]);
+      grp.lookAt(d[1] * 0.25, d[2] * 0.6 + 1.5, 12);
+      grp.userData = { y: d[2], ph: n * 1.7, sp: 0.5 + (n % 4) * 0.12, rz: (n % 2 ? 1 : -1) * (0.08 + (n % 3) * 0.05), ry: grp.rotation.y };
+      nick.add(grp); floaters.push(grp);
+    });
+  })();
+  function updateNick(time) {
+    for (var f = 0; f < floaters.length; f++) {
+      var g = floaters[f], q = g.userData;
+      g.position.y = q.y + Math.sin(time * q.sp + q.ph) * 0.35;
+      g.rotation.z = q.rz + Math.sin(time * 0.6 + q.ph) * 0.06;
+      g.rotation.y = q.ry + Math.sin(time * 0.4 + q.ph) * 0.12;
+    }
+    for (var i = 0; i < shapes.length; i++) {
+      var m = shapes[i], u = m.userData;
+      m.position.y = u.y + Math.sin(time * u.sp + u.ph) * 0.5;
+      m.rotation.y += u.rs * 0.01; m.rotation.x += u.rs * 0.006;
+    }
+  }
+
+  // =====================================================================
+  // POST
+  // =====================================================================
+  var composer = null, bloom = null, lens = null, renderPass = null;
+  if (THREE.EffectComposer && THREE.UnrealBloomPass) {
+    composer = new THREE.EffectComposer(renderer);
+    renderPass = new THREE.RenderPass(arena, camera);
+    composer.addPass(renderPass);
+    bloom = new THREE.UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.85, 0.55, 0.32);
+    composer.addPass(bloom);
+    lens = new THREE.ShaderPass({
+      uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uVel: { value: 0 }, uVig: { value: 1 } },
+      vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+      fragmentShader: [
+        'uniform sampler2D tDiffuse; uniform float uTime; uniform float uVel; uniform float uVig; varying vec2 vUv;',
+        'float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }',
+        'void main(){ vec2 c = vUv - 0.5; vec2 off = c * (0.0012 + uVel * 0.03);',
+        '  vec3 col = vec3(texture2D(tDiffuse, vUv + off).r, texture2D(tDiffuse, vUv).g, texture2D(tDiffuse, vUv - off).b);',
+        '  col *= mix(mix(0.55, 0.85, 1.0 - uVig), 1.0, smoothstep(0.85, 0.25, length(c)));',
+        '  col += (hash(vUv * 900.0 + uTime) - 0.5) * 0.028;',
+        '  gl_FragColor = vec4(col, 1.0); }'
+      ].join('\n')
+    });
+    composer.addPass(lens);
+  }
+
+  // =====================================================================
+  // TIMELINE
+  // =====================================================================
+  var SEGS = [
+    { id: 'hero', w: 0.6, hold: 0 },
+    { id: 'toCourt', w: 1.3 },
+    { id: 'court', w: 0.9, hold: 1 },
+    { id: 'shot', w: 1.9 },
+    { id: 'tun1', w: 1.0 },
+    { id: 'fire', w: 0.9, hold: 2 },
+    { id: 'tun2', w: 0.9 },
+    { id: 'vp', w: 0.9, hold: 3 },
+    { id: 'tun3', w: 1.0 },
+    { id: 'splash', w: 1.1 },
+    { id: 'nickIn', w: 0.7 },
+    { id: 'nick', w: 0.9, hold: 4 },
+    { id: 'nickMid', w: 0.8 },
+    { id: 'nick2', w: 0.9, hold: 5 },
+    { id: 'out', w: 0.5 }
+  ];
+  (function () { var W = 0; SEGS.forEach(function (s) { s.f0 = W; W += s.w; }); SEGS.forEach(function (s) { s.f0 /= W; s.f1 = s.f0 + s.w / W; }); })();
+  var HOLDS = SEGS.filter(function (s) { return s.hold != null; });
+  function segAt(f) {
+    for (var i = 0; i < SEGS.length; i++) if (f <= SEGS[i].f1 || i === SEGS.length - 1) return { i: i, s: SEGS[i], p: Math.min(1, Math.max(0, (f - SEGS[i].f0) / (SEGS[i].f1 - SEGS[i].f0))) };
+  }
+  function segIndex(id) { for (var i = 0; i < SEGS.length; i++) if (SEGS[i].id === id) return i; }
+  function tunnelMax() { return Math.max(1, spacer.offsetHeight - innerHeight); }
+  function scrollF() { return Math.min(1, Math.max(0, scrollY / tunnelMax())); }
+  railBtns.forEach(function (b) {
+    if (b.dataset.stop == null) return;
+    b.addEventListener('click', function () {
+      var sg = HOLDS[+b.dataset.stop];
+      window.scrollTo({ top: ((sg.f0 + sg.f1) / 2) * tunnelMax(), behavior: 'smooth' });
+    });
+  });
+
+  // ---------- camera poses ----------
+  var P = V(0, 0, 0), L = V(0, 0, 0), tA = V(0, 0, 0), tB = V(0, 0, 0), lA = V(0, 0, 0), lB = V(0, 0, 0), bpos = V(0, 0, 0);
+  function jumboDist() {
+    var tan = Math.tan(THREE.MathUtils.degToRad(baseFov / 2));
+    return Math.max((JW * 1.02 / camera.aspect) / (2 * tan), (JH * 1.3) / (2 * tan));
+  }
+  function bez(a, b, c, d, t, out) {
+    var u = 1 - t;
+    return out.set(
+      u * u * u * a.x + 3 * u * u * t * b.x + 3 * u * t * t * c.x + t * t * t * d.x,
+      u * u * u * a.y + 3 * u * u * t * b.y + 3 * u * t * t * c.y + t * t * t * d.y,
+      u * u * u * a.z + 3 * u * u * t * b.z + 3 * u * t * t * c.z + t * t * t * d.z);
+  }
+  var COURT_A = V(-1.6, 1.3, 8.8), COURT_B = V(1.6, 1.3, 8.8);
+  var CHASE = V(-3.4, 1.1, 2.6);
+  var TUN = { start: 0.004, fire: 0.34, vp: 0.62, end: 0.95, drift: 0.028 };
+  var NICK = {
+    a: V(0, 0.7, 16), al: V(0, 5, -10),
+    b: V(0, 3.2, 7), bl: V(0, 3.5, -20),
+    c: V(0, 3.4, 2.5), cl: V(0, 3.6, -20),
+    c2: V(2.5, 3.6, -9), c2l: V(-1.5, 4, -36),
+    c3: V(3, 3.8, -13), c3l: V(-1.5, 4.2, -40),
+    d: V(2.5, 6.5, -21), dl: V(0, 5, -50)
+  };
+  function soft(p) { return lerp(p, ss(0, 1, p), 0.5); }
+  function tunnelPose(t) {
+    curve.getPointAt(t, P);
+    curve.getPointAt(Math.min(1, t + 0.012), L);
+    var roll = Math.sin(t * Math.PI * 4) * 0.25;
+    camera.up.set(Math.sin(roll), Math.cos(roll), 0);
+  }
+
+  // returns scene to render; sets P, L, camera.up
+  var ballVisible = true;
+  function pose(seg, p) {
+    camera.up.set(0, 1, 0);
+    var id = seg.id;
+    ballVisible = true;
+    if (id === 'hero') {
+      var d = jumboDist();
+      P.set(lerp(-0.25, 0.25, p), JY, SCREEN_Z + d + p * 0.6);
+      L.set(0, JY, SCREEN_Z);
+      ballAt(0, bpos); ball.position.copy(bpos);
+      return arena;
+    }
+    if (id === 'toCourt') {
+      var d2 = jumboDist(), q = soft(p);
+      bez(V(0.25, JY, SCREEN_Z + d2 + 0.6), V(0, JY + 1, 11), V(-4, 4.5, 9.5), COURT_A, q, P);
+      bez(V(0, JY, SCREEN_Z), V(0, 11, 0), V(-1.5, 3, 0), V(-1.6, 1.8, 0), q, L);
+      ball.position.copy(B0);
+      return arena;
+    }
+    if (id === 'court') {
+      P.copy(COURT_A).lerp(COURT_B, p);
+      L.set(lerp(-1.6, 3, p), 1.8, 0);
+      ball.position.copy(B0);
+      return arena;
+    }
+    if (id === 'shot') {
+      var courtEndL = V(3, 1.8, 0);
+      if (p < 0.15) {
+        var w = ss(0, 0.15, p);
+        ball.position.copy(B0);
+        tA.copy(COURT_B); lA.copy(courtEndL);
+        tB.copy(B0).add(CHASE); lB.copy(B0);
+        P.copy(tA).lerp(tB, w); L.copy(lA).lerp(lB, w);
+      } else if (p < 0.7) {
+        var sB = (p - 0.15) / 0.55; sB = lerp(sB, ss(0, 1, sB), 0.35);
+        ballAt(sB, bpos); ball.position.copy(bpos);
+        P.copy(bpos).add(CHASE); L.copy(bpos);
+      } else if (p < 0.86) {
+        var s2 = (p - 0.7) / 0.16, w2 = ss(0, 1, s2);
+        ball.position.copy(RIM); ball.position.y -= 1.3 * s2 * s2;
+        tA.copy(RIM).add(CHASE); lA.copy(RIM);
+        tB.copy(RIM).add(V(-0.35, 1.7, 0.05)); lB.copy(RIM).add(V(0.15, -2, 0));
+        P.copy(tA).lerp(tB, w2); L.copy(lA).lerp(lB, w2);
+      } else {
+        var w3 = ss(0.86, 1, p);
+        ballVisible = false;
+        P.copy(RIM).add(V(-0.35, 1.7, 0.05)).lerp(V(RIM.x, RIM.y - 0.4, 0), w3);
+        L.copy(RIM).add(V(0.15, -2, 0)).lerp(V(RIM.x + 0.1, RIM.y - 3, 0), w3);
+      }
+      return arena;
+    }
+    var t = -1;
+    if (id === 'tun1') t = lerp(TUN.start, TUN.fire - TUN.drift, soft(p));
+    else if (id === 'fire') t = lerp(TUN.fire - TUN.drift, TUN.fire + TUN.drift, p);
+    else if (id === 'tun2') t = lerp(TUN.fire + TUN.drift, TUN.vp - TUN.drift, soft(p));
+    else if (id === 'vp') t = lerp(TUN.vp - TUN.drift, TUN.vp + TUN.drift, p);
+    else if (id === 'tun3') t = lerp(TUN.vp + TUN.drift, TUN.end - 0.006, soft(p));
+    else if (id === 'splash' && p < 0.5) t = lerp(TUN.end - 0.006, PORTAL_T - 15 / TUN_L, ss(0, 0.5, p));
+    if (t >= 0) { tunnelPose(t); lastTunnelT = t; return tunnel; }
+
+    if (id === 'splash') { var qs = ss(0.5, 1, p); P.set(0, lerp(3.2, NICK.a.y, qs), lerp(19, NICK.a.z, qs)); L.copy(NICK.al); return nick; }
+    if (id === 'nickIn') { var q2 = soft(p); P.copy(NICK.a).lerp(NICK.b, q2); L.copy(NICK.al).lerp(NICK.bl, q2); return nick; }
+    if (id === 'nick') { P.copy(NICK.b).lerp(NICK.c, p); L.copy(NICK.bl).lerp(NICK.cl, p); return nick; }
+    if (id === 'nickMid') { P.copy(NICK.c).lerp(NICK.c2, soft(p)); L.copy(NICK.cl).lerp(NICK.c2l, soft(p)); return nick; }
+    if (id === 'nick2') { P.copy(NICK.c2).lerp(NICK.c3, p); L.copy(NICK.c2l).lerp(NICK.c3l, p); return nick; }
+    P.copy(NICK.c3).lerp(NICK.d, soft(p)); L.copy(NICK.c3l).lerp(NICK.dl, soft(p));
+    return nick;
+  }
+  var lastTunnelT = 0;
+
+  // ---------- era + year ----------
+  function holdMid(k) { return (HOLDS[k].f0 + HOLDS[k].f1) / 2; }
+  var YEARS = [[0, 2026], [holdMid(1), 2025], [holdMid(2), 2024], [holdMid(3), 2023], [SEGS[segIndex('splash')].f0, 2023], [holdMid(4), 2023], [holdMid(5), 2019], [1, 2019]];
+  function yearAt(f) {
+    for (var i = 1; i < YEARS.length; i++) if (f <= YEARS[i][0]) { var a = YEARS[i - 1], b = YEARS[i]; return Math.round(lerp(a[1], b[1], (f - a[0]) / Math.max(1e-6, b[0] - a[0]))); }
+    return 2019;
+  }
+
+  // ---------- cards ----------
+  var cardEls = [].slice.call(stage.querySelectorAll('.card'));
+  var cards = cardEls.map(function (el, k) {
+    return { el: el, hold: segIndex(HOLDS[k].id), style: el.dataset.style || 'zoom', vis: false };
+  });
+  function placeCards(si, p) {
+    var h = innerHeight;
+    for (var k = 1; k < cards.length; k++) {
+      var c = cards[k], q = -1, mode = '';
+      if (si === c.hold) { q = 1; mode = 'hold'; }
+      else if (si === c.hold - 1 && p > 0.45) { q = (p - 0.45) / 0.55; mode = 'in'; }
+      else if (si === c.hold + 1 && p < 0.35) { q = p / 0.35; mode = 'out'; }
+      if (q < 0) { if (c.vis) { c.el.style.visibility = 'hidden'; c.el.classList.remove('live'); c.vis = false; } continue; }
+      var s = 1, o = 1, dy = 0;
+      if (mode === 'in') {
+        if (c.style === 'zoom') { s = 0.12 + 0.88 * easeOut(q); o = ss(0, 0.6, q); }
+        else { dy = (1 - easeOut(q)) * h * 0.55; s = 0.92 + 0.08 * q; o = ss(0, 0.5, q); }
+      } else if (mode === 'out') {
+        if (c.style === 'zoom') { s = 1 + 2.2 * q * q; o = 1 - ss(0.2, 1, q); }
+        else { dy = -q * h * 0.4; o = 1 - ss(0.1, 1, q); }
+      }
+      if (!c.vis) { c.el.style.visibility = 'visible'; c.vis = true; }
+      c.el.classList.toggle('live', o > 0.85);
+      c.el.style.opacity = o.toFixed(3);
+      c.el.style.transform = 'translateY(-50%) translateY(' + dy.toFixed(1) + 'px) scale(' + s.toFixed(3) + ')';
+    }
+  }
+
+  // ---------- slime splash overlay ----------
+  var sg = slimeCv.getContext('2d');
+  var BLOBS = [];
+  for (var bI = 0; bI < 16; bI++) BLOBS.push({ x: Math.random(), y: rnd(0.1, 0.9), r: rnd(0.22, 0.5), d: rnd(0, 0.35) });
+  BLOBS.push({ x: 0.5, y: 0.5, r: 1.3, d: 0.3 });
+  var DRIPS = [];
+  for (var dI = 0; dI < 14; dI++) DRIPS.push({ x: rnd(0, 1), w: rnd(0.02, 0.06), l: rnd(0.15, 0.6), b: rnd(0.03, 0.08) });
+  var slimeShown = false;
+  function sizeSlime() { slimeCv.width = Math.ceil(innerWidth); slimeCv.height = Math.ceil(innerHeight); }
+  var DROPS = [];
+  for (var qI = 0; qI < 22; qI++) DROPS.push({ a: rnd(0, Math.PI * 2), sp: rnd(0.4, 1.2), r: rnd(0.012, 0.04) });
+  var portalPx = { r: 100, x: 0, y: 0 };
+  function slimePath(cx, cy, r, t) {
+    sg.beginPath();
+    for (var i2 = 0; i2 <= 72; i2++) {
+      var a = i2 / 72 * Math.PI * 2;
+      var rr = r * (1 + 0.05 * Math.sin(a * 6 + t * 2) + 0.03 * Math.sin(a * 11 - t * 3));
+      var px = cx + Math.cos(a) * rr, py = cy + Math.sin(a) * rr;
+      i2 === 0 ? sg.moveTo(px, py) : sg.lineTo(px, py);
+    }
+    sg.closePath();
+  }
+  // Splash: plays on its own clock once you scroll past the portal.
+  // 0 -> HIT: the camera rushes into the slime. HIT -> SWAP: slime splats hit the lens and merge.
+  // SWAP -> LEN: the sheet slides off, leaving drips and drops, and the Nick world shows through.
+  var SPLASH_HIT = 0.32, SPLASH_SWAP = 0.8, SPLASH_LEN = 2.0, splashStart = -1;
+  function spikes(n, lo, hi) { var a = []; for (var i = 0; i < n; i++) a.push({ a: rnd(0, Math.PI * 2), w: rnd(0.06, 0.16), l: rnd(lo, hi) }); return a; }
+  var SPLATS = [];
+  for (var pI = 0; pI < 13; pI++) SPLATS.push({ x: rnd(0.08, 0.92), y: rnd(0.1, 0.9), r: rnd(0.07, 0.17), t0: SPLASH_HIT + rnd(0.02, 0.3), sp: spikes(7, 0.15, 0.7), ph: rnd(0, 6) });
+  var CROWN = spikes(12, 0.2, 0.75);
+  var LENS = [];
+  for (var lI = 0; lI < 16; lI++) LENS.push({ x: rnd(0.05, 0.95), y: rnd(0.05, 0.8), r: rnd(0.012, 0.04), v: rnd(0.25, 0.7), d: rnd(0.55, 0.95) });
+  function blob(cx, cy, r, sp, ph) {
+    sg.beginPath();
+    for (var i2 = 0; i2 <= 96; i2++) {
+      var a = i2 / 96 * Math.PI * 2, k = 1 + 0.06 * Math.sin(a * 5 + ph) + 0.03 * Math.sin(a * 11 + ph * 2);
+      for (var n = 0; n < sp.length; n++) {
+        var da = Math.atan2(Math.sin(a - sp[n].a), Math.cos(a - sp[n].a));
+        k += sp[n].l * Math.exp(-(da * da) / (2 * sp[n].w * sp[n].w * 0.2));
+      }
+      var px = cx + Math.cos(a) * r * k, py = cy + Math.sin(a) * r * k;
+      i2 === 0 ? sg.moveTo(px, py) : sg.lineTo(px, py);
+    }
+    sg.closePath();
+  }
+  function slimeFill(W, H) {
+    var g = sg.createRadialGradient(W * 0.4, H * 0.35, 0, W / 2, H / 2, Math.hypot(W, H) * 0.7);
+    g.addColorStop(0, '#b8ff7a'); g.addColorStop(0.45, '#6fdc1f'); g.addColorStop(1, '#3a9e08');
+    return g;
+  }
+  function drawSplash(tau) {
+    var W = slimeCv.width, H = slimeCv.height, D = Math.hypot(W, H), cx = W / 2, cy = H / 2;
+    sg.clearRect(0, 0, W, H);
+    if (tau < SPLASH_HIT) return;
+    var fill = slimeFill(W, H);
+    if (tau < SPLASH_SWAP + 0.05) {
+      var shapes = [];
+      var gC = easeOut(Math.min(1, (tau - SPLASH_HIT) / (SPLASH_SWAP - SPLASH_HIT - 0.06)));
+      shapes.push([cx, cy, lerp(D * 0.05, D * 0.62, gC), CROWN, 0]);
+      SPLATS.forEach(function (sp) {
+        if (tau < sp.t0) return;
+        var g = easeOut(Math.min(1, (tau - sp.t0) / 0.1));
+        shapes.push([sp.x * W, sp.y * H, sp.r * D * g, sp.sp, sp.ph]);
+      });
+      // shadow pass gives each splat an edge against the tunnel
+      sg.fillStyle = 'rgba(10,40,0,0.55)';
+      shapes.forEach(function (o) { blob(o[0] + 3, o[1] + 6, o[2] * 1.03, o[3], o[4]); sg.fill(); });
+      sg.fillStyle = fill;
+      shapes.forEach(function (o) { blob(o[0], o[1], o[2], o[3], o[4]); sg.fill(); });
+      // droplets thrown out of the centre
+      var gD = Math.min(1, (tau - SPLASH_HIT) / 0.35);
+      CROWN.forEach(function (c, n) {
+        var dist = D * (0.06 + gD * (0.35 + c.l * 0.4)), rad = D * (0.01 + 0.008 * (n % 3)) * (1 - gD * 0.5);
+        sg.beginPath(); sg.arc(cx + Math.cos(c.a + 0.2) * dist, cy + Math.sin(c.a + 0.2) * dist, rad, 0, 7); sg.fill();
+      });
+      sg.fillStyle = 'rgba(255,255,255,0.32)';
+      shapes.forEach(function (o, n) {
+        if (n % 2) return;
+        sg.beginPath(); sg.ellipse(o[0] - o[2] * 0.35, o[1] - o[2] * 0.4, o[2] * 0.22, o[2] * 0.08, -0.6, 0, 7); sg.fill();
+      });
+      return;
+    }
+    var q = Math.min(1, (tau - SPLASH_SWAP - 0.05) / (SPLASH_LEN - SPLASH_SWAP - 0.15)), y0 = q * q * H * 1.35;
+    sg.fillStyle = fill;
+    sg.fillRect(0, y0, W, H - y0 + 2);
+    DRIPS.forEach(function (d) {
+      var len = d.l * H * Math.min(1, q * 2.2), x = d.x * W, w = d.w * W, top = y0 - len;
+      sg.beginPath();
+      sg.moveTo(x - w / 2, y0 + 1); sg.lineTo(x - w * 0.28, top + w * 0.3);
+      sg.arc(x, top + w * 0.3, w * 0.28, Math.PI, 0); sg.lineTo(x + w / 2, y0 + 1); sg.closePath(); sg.fill();
+      sg.beginPath(); sg.arc(x + w, y0, d.b * W * 0.6, Math.PI, 0); sg.fill();
+    });
+    sg.fillStyle = 'rgba(255,255,255,0.22)'; sg.fillRect(0, y0 + 8, W, 3);
+    LENS.forEach(function (l) {
+      var fade = 1 - ss(l.d, 1, q); if (fade <= 0) return;
+      var x = l.x * W, y = l.y * H + q * q * H * l.v, r = l.r * D * 0.5, trail = q * H * l.v * 0.35;
+      sg.globalAlpha = fade;
+      sg.fillStyle = '#6fdc1f';
+      sg.beginPath(); sg.moveTo(x - r * 0.35, y - trail); sg.lineTo(x + r * 0.35, y - trail); sg.lineTo(x + r, y); sg.arc(x, y, r, 0, Math.PI); sg.closePath(); sg.fill();
+      sg.fillStyle = 'rgba(255,255,255,0.5)'; sg.beginPath(); sg.arc(x - r * 0.35, y - r * 0.3, r * 0.25, 0, 7); sg.fill();
+      sg.globalAlpha = 1;
+    });
+  }
+
+  // ---------- rail ----------
+  var sections = ['building', 'about', 'contact'].map(function (id) { return document.getElementById(id); });
+  function updateRail(f, inTunnel) {
+    var on = -1;
+    if (inTunnel) {
+      var best = 1e9;
+      HOLDS.forEach(function (sg2, i) { var dd = Math.abs(holdMid(i) - f); if (dd < best) { best = dd; on = i; } });
+    } else {
+      on = HOLDS.length;
+      sections.forEach(function (el, i) { if (el.getBoundingClientRect().top < innerHeight * 0.5) on = HOLDS.length + i; });
+    }
+    railBtns.forEach(function (b, i) { b.classList.toggle('on', i === on); });
+  }
+
+  // ---------- resize ----------
+  var baseFov = 68;
+  function resize() {
+    var w = innerWidth, h = innerHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    baseFov = w < 760 ? 78 : 66;
+    if (composer) { composer.setSize(w, h); bloom.resolution.set(w, h); }
+    sizeSlime();
+  }
+  addEventListener('resize', resize);
+  resize();
+
+  var target = scrollF(), current = target;
+  addEventListener('scroll', function () { target = scrollF(); }, { passive: true });
+
+  // =====================================================================
+  // LOOP
+  // =====================================================================
+  var clock = new THREE.Clock(), vel = 0, intro = reduce ? 1 : 0, elapsed = 0, lastScene = null, lastP = V(0, 0, 0);
+  var lastYear = '', lastEra = '', fogTmp = new THREE.Color();
+  var BLOOM = { arena: [0.9, 0.5, 0.62], tunnel: [0.85, 0.55, 0.32], nick: [0.25, 0.4, 0.9] };
+  function frame() {
+    requestAnimationFrame(frame);
+    var dt = Math.min(clock.getDelta(), 0.05) || 0.016;
+    elapsed += dt;
+    var tm = tunnelMax();
+    var covered = scrollY > tm + innerHeight * 0.95;
+    var inJourney = scrollY < tm + 2;
+    stage.style.visibility = inJourney ? 'visible' : 'hidden';
+    gauge.style.opacity = inJourney ? 1 : 0;
+    updateRail(target, inJourney);
+    if (covered) return;
+
+    current += (target - current) * (reduce ? 1 : Math.min(1, dt * 4));
+    var at = segAt(current), seg = at.s, p = at.p;
+    var spSeg = SEGS[segIndex('splash')], through = current >= spSeg.f0 + (spSeg.f1 - spSeg.f0) * 0.5;
+    if (!through) splashStart = -1;
+    else if (splashStart < 0) splashStart = elapsed;
+    var tau = splashStart < 0 ? -1 : (reduce ? SPLASH_LEN : elapsed - splashStart);
+    var scn = pose(seg, p);
+    // keep the tunnel on screen until the splash has covered it, pushing into the portal
+    if (tau >= 0 && tau < SPLASH_SWAP && scn === nick) {
+      var push = tau < SPLASH_HIT ? Math.pow(tau / SPLASH_HIT, 2.2) : 1;
+      var tp = lerp(PORTAL_T - 15 / TUN_L, PORTAL_T - 0.9 / TUN_L, push);
+      tunnelPose(tp); lastTunnelT = tp; scn = tunnel;
+    }
+    ball.visible = ballVisible;
+    if (scn === arena && !reduce) ball.rotation.z += dt * (seg.id === 'shot' ? 9 : 1.2);
+
+    intro = Math.min(1, intro + dt / 1.8);
+    var ease = 1 - Math.pow(1 - intro, 3);
+
+    // speed from camera motion
+    var moved = scn === lastScene ? P.distanceTo(lastP) / dt : 0;
+    lastP.copy(P); lastScene = scn;
+    var rawVel = reduce ? 0 : Math.min(1, moved / 45);
+    vel += (rawVel - vel) * Math.min(1, dt * 6);
+
+    camera.position.copy(P);
+    camera.lookAt(L);
+    camera.fov = baseFov + (1 - ease) * 30 + vel * (scn === tunnel ? 16 : 6);
+    camera.updateProjectionMatrix();
+
+
+    if (scn === tunnel) {
+      palAt(lastTunnelT, 'bg', fogTmp);
+      tubeMat.uniforms.uFog.value.copy(fogTmp);
+      tunnel.background = fogTmp;
+      tubeMat.uniforms.uTime.value += reduce ? 0 : dt * (1 + vel * 3);
+      portalMat.uniforms.uTime.value = elapsed;
+      if (seg.id === 'splash') { portal.updateMatrixWorld(); camera.updateMatrixWorld(); portalPx = portalRadiusPx(); }
+      updateStreaks(vel);
+    }
+    if (scn === arena) crowdMat.uniforms.uTime.value = elapsed;
+    if (scn === nick) { slimeMat.uniforms.uTime.value = elapsed; updateNick(elapsed); }
+
+    placeCards(at.i, p);
+    cue.style.opacity = seg.id === 'hero' ? (1 - p * 0.8).toFixed(2) : 0;
+
+    // veil into the hoop
+    var vo = 0;
+    if (seg.id === 'shot' && p > 0.86) vo = ss(0.86, 1, p);
+    if (seg.id === 'tun1' && p < 0.15) vo = 1 - ss(0, 0.15, p);
+    veil.style.opacity = vo.toFixed(3);
+
+    // slime
+    if (tau >= 0 && tau < SPLASH_LEN) { slimeShown = true; slimeCv.style.visibility = 'visible'; drawSplash(tau); }
+    else if (slimeShown) { slimeShown = false; slimeCv.style.visibility = 'hidden'; sg.clearRect(0, 0, slimeCv.width, slimeCv.height); }
+
+    var yr = String(yearAt(current));
+    var er = scn === arena ? 'NBA' : scn === tunnel ? 'Tubi' : 'Nick';
+    if (yr !== lastYear) { yearEl.textContent = yr; lastYear = yr; }
+    if (er !== lastEra) { eraEl.textContent = er; lastEra = er; }
+
+    if (composer) {
+      renderPass.scene = scn;
+      var bl = scn === arena ? BLOOM.arena : scn === tunnel ? BLOOM.tunnel : BLOOM.nick;
+      bloom.strength = bl[0] + vel * 0.6 + (1 - ease) * 0.8; bloom.radius = bl[1]; bloom.threshold = bl[2];
+      lens.uniforms.uTime.value = elapsed; lens.uniforms.uVel.value = vel;
+      lens.uniforms.uVig.value = scn === nick ? 0 : 1;
+      composer.render();
+    } else {
+      renderer.render(scn, camera);
+    }
+  }
+  frame();
+})();
+
+</script>
+
 </body>
 </html>
